@@ -1,0 +1,6 @@
+GET http://localhost:8778/actuator/gateway/routes
+
+<> 2023-02-07T230131.200.json
+
+###
+

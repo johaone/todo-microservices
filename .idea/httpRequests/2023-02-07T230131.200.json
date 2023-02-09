@@ -1,0 +1,32 @@
+[
+  {
+    "predicate": "Paths: [/todo-affairs/**], match trailing slash: true",
+    "route_id": "ReactiveCompositeDiscoveryClient_TODO-AFFAIRS",
+    "filters": [
+      "[[RewritePath /todo-affairs/?(?<remaining>.*) = '/${remaining}'], order = 1]"
+    ],
+    "uri": "lb://TODO-AFFAIRS",
+    "order": 0
+  },
+  {
+    "predicate": "Paths: [/todo-users/**], match trailing slash: true",
+    "route_id": "ReactiveCompositeDiscoveryClient_TODO-USERS",
+    "filters": [
+      "[[RewritePath /todo-users/?(?<remaining>.*) = '/${remaining}'], order = 1]"
+    ],
+    "uri": "lb://TODO-USERS",
+    "order": 0
+  },
+  {
+    "predicate": "Paths: [/todo-gateway/**], match trailing slash: true",
+    "metadata": {
+      "management.port": "8778"
+    },
+    "route_id": "ReactiveCompositeDiscoveryClient_TODO-GATEWAY",
+    "filters": [
+      "[[RewritePath /todo-gateway/?(?<remaining>.*) = '/${remaining}'], order = 1]"
+    ],
+    "uri": "lb://TODO-GATEWAY",
+    "order": 0
+  }
+]

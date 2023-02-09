@@ -1,0 +1,9 @@
+rootProject.name = 'todo-microservices'
+
+includeBuild 'todo-config'
+includeBuild 'todo-gateway'
+includeBuild 'todo-server'
+includeBuild 'todo-entity'
+includeBuild 'todo-affairs'
+includeBuild 'todo-util'
+includeBuild 'todo-users'

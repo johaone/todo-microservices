@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/todo-config" name="todo-config">
+                <projects>
+                  <project path="$PROJECT_DIR$/todo-config" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/todo-gateway" name="todo-gateway">
+                <projects>
+                  <project path="$PROJECT_DIR$/todo-gateway" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/todo-server" name="todo-server">
+                <projects>
+                  <project path="$PROJECT_DIR$/todo-server" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/todo-entity" name="todo-entity">
+                <projects>
+                  <project path="$PROJECT_DIR$/todo-entity" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/todo-affairs" name="todo-affairs">
+                <projects>
+                  <project path="$PROJECT_DIR$/todo-affairs" />
+                  <project path="$PROJECT_DIR$/todo-affairs/todo-utils" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/todo-util" name="todo-util">
+                <projects>
+                  <project path="$PROJECT_DIR$/todo-util" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/todo-users" name="todo-users">
+                <projects>
+                  <project path="$PROJECT_DIR$/todo-users" />
+                  <project path="$PROJECT_DIR$/todo-users/todo-utils" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/todo-affairs" />
+            <option value="$PROJECT_DIR$/todo-affairs/todo-utils" />
+            <option value="$PROJECT_DIR$/todo-config" />
+            <option value="$PROJECT_DIR$/todo-entity" />
+            <option value="$PROJECT_DIR$/todo-gateway" />
+            <option value="$PROJECT_DIR$/todo-server" />
+            <option value="$PROJECT_DIR$/todo-users" />
+            <option value="$PROJECT_DIR$/todo-users/todo-utils" />
+            <option value="$PROJECT_DIR$/todo-util" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

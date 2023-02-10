@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26be85a9-7a9c-452a-9b0a-33267ec9ac73" name="Changes" comment="" />
+    <list default="true" id="26be85a9-7a9c-452a-9b0a-33267ec9ac73" name="Changes" comment="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated).">
+      <change afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/README.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/information_schema.FNRwLQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/information_schema.FNRwLQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/pg_catalog.0S1ZNQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/users.CI6mBg.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/users.CI6mBg.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/affairs.ytAVvw.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/affairs.ytAVvw.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/information_schema.FNRwLQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/pg_catalog.0S1ZNQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/public.abK9xQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/DeadLetterQueueException.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/DeadLetterQueueException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/MessageConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/MessageConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/TodoInBindings.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/TodoInBindings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/MessagePublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/legacy/MessagePublisher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/TodoOutBinding.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/legacy/TodoOutBinding.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -91,7 +109,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "File.Encoding",
-    "spring.configuration.checksum": "ece8b7c5581620d92b96b2a99d2f43db"
+    "spring.configuration.checksum": "02a7ebb24e9cccc3e4279ac7f7da60d6"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -200,10 +218,10 @@
     </configuration>
     <list>
       <item itemvalue="HTTP Request.PlannerGatewayApplication  | #1" />
+      <item itemvalue="Spring Boot.PlannerConfigApplication " />
       <item itemvalue="Spring Boot.TodoUtilsApplication" />
       <item itemvalue="Spring Boot.PlannerEntityApplication" />
       <item itemvalue="Spring Boot.PlannerGatewayApplication " />
-      <item itemvalue="Spring Boot.PlannerConfigApplication " />
       <item itemvalue="Spring Boot.PlannerServerApplication " />
       <item itemvalue="Spring Boot.PlannerTodoApplication " />
       <item itemvalue="Spring Boot.PlannerUsersApplication" />
@@ -230,8 +248,17 @@
       <workItem from="1675079401752" duration="562000" />
       <workItem from="1675079978088" duration="12695000" />
       <workItem from="1675164709998" duration="57373000" />
-      <workItem from="1675613325173" duration="27252000" />
+      <workItem from="1675613325173" duration="28906000" />
+      <workItem from="1676056840318" duration="8037000" />
     </task>
+    <task id="LOCAL-00001" summary="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated).">
+      <created>1675903944213</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1675903944213</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -247,6 +274,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated)." />
+    <option name="LAST_COMMIT_MESSAGE" value="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated)." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

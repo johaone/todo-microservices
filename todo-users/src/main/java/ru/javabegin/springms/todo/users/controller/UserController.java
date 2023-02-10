@@ -8,7 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.javabegin.springms.todo.entity.UserData;
-import ru.javabegin.springms.todo.users.mq.MessagePublisher;
+import ru.javabegin.springms.todo.users.mq.functionalcode.MessageOutFunc;
+//import ru.javabegin.springms.todo.users.mq.legacy.MessagePublisher;
 import ru.javabegin.springms.todo.users.search.UserSearchValues;
 import ru.javabegin.springms.todo.users.service.UserService;
 import ru.javabegin.springms.todo.utils.webclient.UserWebClientBuilder;
@@ -23,11 +24,12 @@ public class UserController {
     private final UserService userService;
     private final UserWebClientBuilder userWebClientBuilder;
 
-    private MessagePublisher messagePublisher;
+    //    private MessagePublisher messagePublisher; // для применения legacy
+    private MessageOutFunc messagePublisher;
 
     private static final String ID_COLUMN = "id"; // имя столбца
 
-    public UserController(UserService userService, UserWebClientBuilder userWebClientBuilder, MessagePublisher messagePublisher) {
+    public UserController(UserService userService, UserWebClientBuilder userWebClientBuilder, MessageOutFunc messagePublisher) {
         this.userService = userService;
         this.userWebClientBuilder = userWebClientBuilder;
         this.messagePublisher = messagePublisher;
@@ -83,17 +85,15 @@ public class UserController {
 
         // создание тестовых данных для нового user через асинхронный вызов другого мс
 
-        if (user != null) {
-        /*    // заполняем начальные данные пользователя (в параллельном потоке)
+        /* if (user != null) {
+           // заполняем начальные данные пользователя (в параллельном потоке)
             userWebClientBuilder.initUserData(user.getId()).subscribe(result -> {
                         System.out.println("user populated: " + result);
                     }
             );*/
 
-            // создание тестовых данных для нового user через отправку сообщения в message broker(mq) - это асинхронный вызов
-            messagePublisher.newUserInit(user.getId()); // отправка сообщения по каналу отправки, что user создан
-
-        }
+        // создание тестовых данных для нового user через отправку сообщения в message broker(mq) - это асинхронный вызов
+        messagePublisher.sendMessage(user.getId()); // отправка сообщения по каналу отправки, что user создан
 
         return ResponseEntity.ok(user); // возвращаем созданный объект со сгенерированным id
 

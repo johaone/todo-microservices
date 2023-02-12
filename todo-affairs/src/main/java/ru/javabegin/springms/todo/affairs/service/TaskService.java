@@ -1,6 +1,8 @@
 package ru.javabegin.springms.todo.affairs.service;
 
 import javax.transaction.Transactional;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -13,12 +15,9 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository; // DI - ссылка для внедрения объекта
-
-    public TaskService(TaskRepository taskRepository) { // конструктор для запуска DI
-        this.taskRepository = taskRepository;
-    }
 
     // Помимо ссылки на репозиторий, можно также реализовать методы работы с данными, а вызывать его уже из контроллера
     public Optional<Task> findById(Long id) { // этот метод не из интерфейса, его создали сами

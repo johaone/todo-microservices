@@ -1,5 +1,6 @@
 package ru.javabegin.springms.todo.affairs.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,15 +11,11 @@ import ru.javabegin.springms.todo.entity.Statistic;
 
 @RestController
 @RequestMapping("/statistic")
+@RequiredArgsConstructor
 public class StatisticController {
     private final StatisticService statisticService;
-
-    public StatisticController(StatisticService statisticService) {
-        this.statisticService = statisticService;
-    }
-
-    @PostMapping("/find") // POST - НЕиденпотентный, то есть повторный запрос меняет состояние сервера. (Повторный тот же запрос в банк спишет повторно деньги)
-    public ResponseEntity<Statistic> find(@RequestBody Long userId) { //  в параметры email также передается в формате json, указывается аннотация для считывания этого файла
+    @PostMapping("/find")
+    public ResponseEntity<Statistic> find(@RequestBody Long userId) {
         return ResponseEntity.ok(statisticService.findStatistic(userId));
     }
 

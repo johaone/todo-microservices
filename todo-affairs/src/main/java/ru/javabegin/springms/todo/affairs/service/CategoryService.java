@@ -1,6 +1,8 @@
 package ru.javabegin.springms.todo.affairs.service;
 
 import javax.transaction.Transactional;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.javabegin.springms.todo.affairs.repository.CategoryRepository;
 import ru.javabegin.springms.todo.entity.Category;
@@ -18,14 +20,9 @@ import java.util.Optional;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
-    // Через механизм DI создается ссылка на репозиторий, который при старте приложения подставит в эту переменную нужные класс-реализацию
     private final CategoryRepository repository; // сервис имеет право обращаться к репозиторию (БД)
-
-    // Но чтобы сработал DI, нужно создать конструктор в параметры которого передается объект репозитория(что нужно внедрить в ссылку)
-    public CategoryService(CategoryRepository repository) { // Объект репозитория создается на лету, это берет на себя Spring
-        this.repository = repository;
-    }
 
     // Помимо ссылки на репозиторий, можно также реализовать методы работы с данными, а вызывать его уже из контроллера
     public Optional<Category> findById(Long id) { // этот метод не из интерфейса, его создали сами

@@ -1,5 +1,6 @@
 package ru.javabegin.springms.todo.affairs.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,23 +21,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-//https://javabegin.ru/courses/spring-restful/lessons/metod-dlya-poiska-zadach-post/
 @RestController
 @RequestMapping("/task")
+@RequiredArgsConstructor
 public class TaskController {
     private static final String ID_COLUMN = "id"; // имя столбца
     private final TaskService taskService;
 
     private final UserFeignClient userFeignClient;
-    public TaskController(TaskService taskService, @Qualifier("userFeignClientFallback") UserFeignClient userFeignClient) {
-        this.taskService = taskService;
-        this.userFeignClient = userFeignClient;
-    }
-
 
     /**Метод POST*/
-    // уязвимые данные получаются через POST метод с указанием каких либо данных в тело метода
-    @PostMapping("/all") // POST - НЕиденпотентный, то есть повторный запрос меняет состояние сервера. (Повторный тот же запрос в банк спишет повторно деньги)
+    @PostMapping("/all")
     public List<Task> findAll(@RequestBody Long userId) { //  в параметры email также передается в формате json, указывается аннотация для считывания этого файла
         return taskService.findAll(userId);
     }
@@ -44,25 +39,20 @@ public class TaskController {
 
     /**Добавление задачи методом POST*/
 
-    @PostMapping("/add") //https://www.guru99.com/put-vs-post.html
-    // @RequestBody в postman в body нужно отправить именно в формате JSON
-    public ResponseEntity<Task> add(@RequestBody Task task) { // ResponseEntity - специальный объект, содержащий статус ответа(ок, шибка и т.д., и объекты, указанные с помощью женерикс(как в данном случае))
+    @PostMapping("/add")
+    public ResponseEntity<Task> add(@RequestBody Task task) {
+
         // проверка на обязательные параметры
-        if(task.getId()!= null && task.getId() != 0 ) { // Это означает, что id заполнено. Значит такая категория уже существует в БД
-            // id создается автоматически в БД (autoincrement), поэтому его передавать не нужно
+        if(task.getId()!= null && task.getId() != 0 ) {
 
             return new ResponseEntity("redundant param: id MUST be null", HttpStatus.NOT_ACCEPTABLE);
         }
 
         // если передать пустое значение title
-        if (task.getTitle() == null || task.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов
+        if (task.getTitle() == null || task.getTitle().trim().length() == 0) {
             return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        // проверка на наличие user вызовом другого микросервиса
-        /*if (userFeignClient.findUserById(task.getUserId()) != null) {
-            return ResponseEntity.ok(taskService.add(task));
-        }*/
         ResponseEntity<UserData> result = userFeignClient.findUserById(task.getUserId());
         if (result == null) { // если мс недоступен, возвращается null
             return new ResponseEntity("система пользователей недоступна, попробуйте позднее!", HttpStatus.NOT_FOUND);
@@ -72,24 +62,25 @@ public class TaskController {
             return ResponseEntity.ok(taskService.add(task));
         }
 
-        // Если выполнить после асинхронного метода проверки на наличие пользователя, то независимо есть такой user или нет, будет выходить "id не найден". Поэтому асинхронный метод не подходит
+        // Если выполнить после асинхронного метода проверки на наличие пользователя, то независимо есть такой user или нет,
+        // будет выходить "id не найден". Поэтому асинхронный метод не подходит
         // А синхронный дожидается ответа и далее добавляет, либо выводит, что не нашел пользователя
         return new ResponseEntity("user id = " + task.getUserId() + " not found", HttpStatus.NOT_ACCEPTABLE);
     }
 
 
     /**Обновление задачи методом PUT*/
-    @PutMapping("/update") // Метод идемпотентный - повторная отправка запроса не влияет на сервер
-    public ResponseEntity update(@RequestBody Task task) { //Будет возвращать только статус, а не объект entity, как в POST
+    @PutMapping("/update")
+    public ResponseEntity update(@RequestBody Task task) { //
         // проверка на обязательные параметры
-        if(task.getId() == null && task.getId() == 0 ) { // Значит такой категории нет в БД для его обновления
+        if(task.getId() == null && task.getId() == 0 ) { //
 
             return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
         }
 
         // если передать пустое значение title
-        if (task.getTitle() == null || task.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов
-            return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE); // Вызванная категория не может быть без названия
+        if (task.getTitle() == null || task.getTitle().trim().length() == 0) {
+            return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE);
         }
 
         taskService.update(task);
@@ -97,11 +88,9 @@ public class TaskController {
     }
 
     /**Удаление задачи методом DELETE*/
-    // DELETE - идемпотентный метод. Удаление можно также производить через POST, причем id категории для удаления передается в body
-    @DeleteMapping("/delete/{id}") // id категории, которую надо удалить, предается в адресной строке.
+    @DeleteMapping("/delete/{id}") //
     public ResponseEntity delete(@PathVariable("id") Long id) {
 
-        // Применим исключение ошибки stacktrace. Через try-catch можно обработать исключение в статус
         try {
             taskService.deleteById(id);
         } catch (Exception e) {
@@ -116,7 +105,7 @@ public class TaskController {
     /** Поиск задачи методом POST указанным параметрам и userId пользователя*/
     @PostMapping("/search")
     // НЕ List, а Page - для вывода коллекции постранично
-    public ResponseEntity<Page<Task>> search (@RequestBody TaskSearchValues taskSearchValues) throws ParseException { // Создали отдельный класс с параметрами title и email. См пакет search
+    public ResponseEntity<Page<Task>> search (@RequestBody TaskSearchValues taskSearchValues) { // Создали отдельный класс с параметрами title и email. См пакет search
 
         // исключить NullPointerException
         String title = taskSearchValues.getTitle() != null ? taskSearchValues.getTitle() : null;
@@ -198,7 +187,7 @@ public class TaskController {
     }
 
     /**Поиск задачи по ID методом POST*/
-    @PostMapping("/searchById") // ID передаем в тело метода - безопасно
+    @PostMapping("/searchById")
     public ResponseEntity<Task> findById(@RequestBody Long id) {
         Optional<Task> task = taskService.findById(id);
         try {

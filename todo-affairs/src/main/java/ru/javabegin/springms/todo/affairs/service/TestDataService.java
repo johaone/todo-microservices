@@ -1,5 +1,6 @@
 package ru.javabegin.springms.todo.affairs.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,17 +13,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class TestDataService {
 
     private final CategoryService categoryService;
     private final PriorityService priorityService;
     private final TaskService taskService;
-
-    public TestDataService(CategoryService categoryService, PriorityService priorityService, TaskService taskService) {
-        this.categoryService = categoryService;
-        this.priorityService = priorityService;
-        this.taskService = taskService;
-    }
 
     public ResponseEntity<Boolean> init(@RequestBody Long userId) {
         Priority priority = new Priority();

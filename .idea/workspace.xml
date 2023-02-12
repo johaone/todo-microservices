@@ -4,24 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="26be85a9-7a9c-452a-9b0a-33267ec9ac73" name="Changes" comment="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated).">
-      <change afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/README.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/information_schema.FNRwLQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/information_schema.FNRwLQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/pg_catalog.0S1ZNQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/users.CI6mBg.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/users.CI6mBg.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/affairs.ytAVvw.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/affairs.ytAVvw.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/information_schema.FNRwLQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/pg_catalog.0S1ZNQ.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/public.abK9xQ.meta" afterDir="false" />
+    <list default="true" id="26be85a9-7a9c-452a-9b0a-33267ec9ac73" name="Changes" comment="Добавлен способ отправки сообщений через функциональный код">
+      <change beforePath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/DeadLetterQueueException.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/DeadLetterQueueException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/MessageConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/MessageConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/TodoInBindings.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/TodoInBindings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/CategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/PriorityController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/PriorityController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/StatisticController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/StatisticController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TaskController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TestDataController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TestDataController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/CategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/CategoryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/PriorityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/PriorityService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/StatisticService.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/StatisticService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TaskService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TestDataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TestDataService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-config/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/todo-config/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/MessagePublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/legacy/MessagePublisher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/TodoOutBinding.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/legacy/TodoOutBinding.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/functionalcode/MessageOutChannel.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/functionalcode/MessageOutChannel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,29 +93,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "jdk.selected.JAVA_MODULE": "18",
-    "last_opened_file_path": "C:/JavaBegin/Spring/todo-microservices",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "File.Encoding",
-    "spring.configuration.checksum": "02a7ebb24e9cccc3e4279ac7f7da60d6"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;18&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/JavaBegin/Spring/todo-microservices&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;File.Encoding&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;02a7ebb24e9cccc3e4279ac7f7da60d6&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -249,7 +248,7 @@
       <workItem from="1675079978088" duration="12695000" />
       <workItem from="1675164709998" duration="57373000" />
       <workItem from="1675613325173" duration="28906000" />
-      <workItem from="1676056840318" duration="8037000" />
+      <workItem from="1676056840318" duration="15117000" />
     </task>
     <task id="LOCAL-00001" summary="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated).">
       <created>1675903944213</created>
@@ -258,7 +257,21 @@
       <option name="project" value="LOCAL" />
       <updated>1675903944213</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Добавлен способ отправки сообщений через функциональный код">
+      <created>1676065026166</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1676065026166</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Добавлен способ отправки сообщений через функциональный код">
+      <created>1676065124946</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1676065124946</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -277,7 +290,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated)." />
-    <option name="LAST_COMMIT_MESSAGE" value="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated)." />
+    <MESSAGE value="Добавлен способ отправки сообщений через функциональный код" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлен способ отправки сообщений через функциональный код" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

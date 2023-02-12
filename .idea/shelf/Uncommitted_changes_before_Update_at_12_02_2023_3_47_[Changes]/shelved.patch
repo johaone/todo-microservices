@@ -1,0 +1,958 @@
+Index: todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TaskService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.affairs.service;\r\n\r\nimport javax.transaction.Transactional;\r\nimport org.springframework.data.domain.Page;\r\nimport org.springframework.data.domain.PageRequest;\r\nimport org.springframework.stereotype.Service;\r\nimport ru.javabegin.springms.todo.affairs.repository.TaskRepository;\r\nimport ru.javabegin.springms.todo.entity.Task;\r\n\r\nimport java.util.Date;\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n@Service\r\n@Transactional\r\npublic class TaskService {\r\n    private final TaskRepository taskRepository; // DI - ссылка для внедрения объекта\r\n\r\n    public TaskService(TaskRepository taskRepository) { // конструктор для запуска DI\r\n        this.taskRepository = taskRepository;\r\n    }\r\n\r\n    // Помимо ссылки на репозиторий, можно также реализовать методы работы с данными, а вызывать его уже из контроллера\r\n    public Optional<Task> findById(Long id) { // этот метод не из интерфейса, его создали сами\r\n        return taskRepository.findById(id); // А этот метод из интерфейса репозитории. Сначала извлечь, затем вызвать\r\n    }\r\n\r\n    public List<Task> findAll(Long userId) {\r\n        return taskRepository.findByUserIdOrderByTitle(userId);\r\n    }\r\n\r\n    public Task add(Task task) {\r\n        return taskRepository.save(task); // Может как создать, так и обновить объект. В данном случае, создает новый объект, так как вызывается для добавления новой категории\r\n    }\r\n\r\n    public Task update(Task task) {\r\n        return taskRepository.save(task); // Тут он обновляет уже существующую категорию\r\n    }\r\n\r\n    public void deleteById(Long id) {\r\n        taskRepository.deleteById(id);\r\n    }\r\n\r\n    public Page<Task> findByParam(String title, Boolean completed, Long priorityId, Long categoryId, Long userId, Date dateFrom, Date dateTo, PageRequest paging) {\r\n        return taskRepository.findByParam(title, completed, priorityId, categoryId, userId, dateFrom, dateTo, paging);\r\n    }\r\n}\r\n\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TaskService.java b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TaskService.java
+--- a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TaskService.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TaskService.java	(date 1676161526714)
+@@ -1,6 +1,8 @@
+ package ru.javabegin.springms.todo.affairs.service;
+ 
+ import javax.transaction.Transactional;
++
++import lombok.RequiredArgsConstructor;
+ import org.springframework.data.domain.Page;
+ import org.springframework.data.domain.PageRequest;
+ import org.springframework.stereotype.Service;
+@@ -13,13 +15,10 @@
+ 
+ @Service
+ @Transactional
++@RequiredArgsConstructor
+ public class TaskService {
+     private final TaskRepository taskRepository; // DI - ссылка для внедрения объекта
+ 
+-    public TaskService(TaskRepository taskRepository) { // конструктор для запуска DI
+-        this.taskRepository = taskRepository;
+-    }
+-
+     // Помимо ссылки на репозиторий, можно также реализовать методы работы с данными, а вызывать его уже из контроллера
+     public Optional<Task> findById(Long id) { // этот метод не из интерфейса, его создали сами
+         return taskRepository.findById(id); // А этот метод из интерфейса репозитории. Сначала извлечь, затем вызвать
+Index: todo-config/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>server.port=8890\r\nspring.application.name=todo-config\r\n\r\nspring.cloud.config.server.git.uri=https://github.com/johaone/todo-microservice.git\r\n\r\nspring.cloud.config.server.git.username=johaone\r\nspring.cloud.config.server.git.password=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\r\n\r\nspring.cloud.config.server.git.clone-on-start=true\r\n\r\nspring.cloud.config.server.git.basedir=file://c:/javabegin/git/local/todo\r\n\r\nspring.cloud.config.server.git.default-label=main\r\n\r\nlogging.pattern.console=%C{1.} [%-5level] %d{HH:mm:ss} - %msg%n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-config/src/main/resources/application.properties b/todo-config/src/main/resources/application.properties
+--- a/todo-config/src/main/resources/application.properties	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-config/src/main/resources/application.properties	(date 1676162599481)
+@@ -4,7 +4,7 @@
+ spring.cloud.config.server.git.uri=https://github.com/johaone/todo-microservice.git
+ 
+ spring.cloud.config.server.git.username=johaone
+-spring.cloud.config.server.git.password=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
++spring.cloud.config.server.git.password=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
+ 
+ spring.cloud.config.server.git.clone-on-start=true
+ 
+Index: todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TestDataController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.affairs.controller;\r\n\r\n// класс, предназначенный для заполнения тестовыми данными таблиц\r\n\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\nimport ru.javabegin.springms.todo.affairs.service.CategoryService;\r\nimport ru.javabegin.springms.todo.affairs.service.PriorityService;\r\nimport ru.javabegin.springms.todo.affairs.service.TaskService;\r\nimport ru.javabegin.springms.todo.affairs.service.TestDataService;\r\nimport ru.javabegin.springms.todo.entity.Category;\r\nimport ru.javabegin.springms.todo.entity.Priority;\r\nimport ru.javabegin.springms.todo.entity.Task;\r\n\r\nimport java.util.Calendar;\r\nimport java.util.Date;\r\n\r\n@RestController\r\n@RequestMapping(\"/testData\")\r\npublic class TestDataController {\r\n\r\n    private final TestDataService testDataService;\r\n\r\n    public TestDataController(TestDataService testDataService) {\r\n        this.testDataService = testDataService;\r\n    }\r\n\r\n    @PostMapping(\"/initTestData\")\r\n    public ResponseEntity<Boolean> init(@RequestBody Long userId) {\r\n\r\n        testDataService.init(userId);\r\n\r\n        return ResponseEntity.ok(true);\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TestDataController.java b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TestDataController.java
+--- a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TestDataController.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TestDataController.java	(date 1676159016701)
+@@ -2,34 +2,23 @@
+ 
+ // класс, предназначенный для заполнения тестовыми данными таблиц
+ 
++import lombok.RequiredArgsConstructor;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.web.bind.annotation.PostMapping;
+ import org.springframework.web.bind.annotation.RequestBody;
+ import org.springframework.web.bind.annotation.RequestMapping;
+ import org.springframework.web.bind.annotation.RestController;
+-import ru.javabegin.springms.todo.affairs.service.CategoryService;
+-import ru.javabegin.springms.todo.affairs.service.PriorityService;
+-import ru.javabegin.springms.todo.affairs.service.TaskService;
+ import ru.javabegin.springms.todo.affairs.service.TestDataService;
+-import ru.javabegin.springms.todo.entity.Category;
+-import ru.javabegin.springms.todo.entity.Priority;
+-import ru.javabegin.springms.todo.entity.Task;
+-
+-import java.util.Calendar;
+-import java.util.Date;
+ 
+ @RestController
+ @RequestMapping("/testData")
++@RequiredArgsConstructor
+ public class TestDataController {
+ 
+     private final TestDataService testDataService;
+ 
+-    public TestDataController(TestDataService testDataService) {
+-        this.testDataService = testDataService;
+-    }
+-
+     @PostMapping("/initTestData")
+-    public ResponseEntity<Boolean> init(@RequestBody Long userId) {
++    public ResponseEntity<Boolean> initTestData(@RequestBody Long userId) {
+ 
+         testDataService.init(userId);
+ 
+Index: todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/CategoryService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.affairs.service;\r\n\r\nimport javax.transaction.Transactional;\r\nimport org.springframework.stereotype.Service;\r\nimport ru.javabegin.springms.todo.affairs.repository.CategoryRepository;\r\nimport ru.javabegin.springms.todo.entity.Category;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n/**СЕРВИСЫ НУЖНЫ ДЛЯ СОЗДАНИЯ API BACKEND ДЛЯ ВЫЗОВА ИЗ КОНТРОЛЛЕРА*/\r\n// Сервисы это посредник, стоящий между контроллером(а к нему обращается браузер), для доступа к репозиториям,\r\n// чтобы оттуда получить нужные SQL запросы для получения данных из БД. Даже если методов мало и можно обращаться к контроллерам напрямую,\r\n    // лучше использовать отдельный класс Сервисов\r\n\r\n    // Если в методе несколько запросов нужно указать @Transactional, и если в одном из запросов будет ошибка, то\r\n    // все остальные запросы откатятся назад (Rollback)\r\n\r\n@Transactional\r\n@Service\r\npublic class CategoryService {\r\n    // Через механизм DI создается ссылка на репозиторий, который при старте приложения подставит в эту переменную нужные класс-реализацию\r\n    private final CategoryRepository repository; // сервис имеет право обращаться к репозиторию (БД)\r\n\r\n    // Но чтобы сработал DI, нужно создать конструктор в параметры которого передается объект репозитория(что нужно внедрить в ссылку)\r\n    public CategoryService(CategoryRepository repository) { // Объект репозитория создается на лету, это берет на себя Spring\r\n        this.repository = repository;\r\n    }\r\n\r\n    // Помимо ссылки на репозиторий, можно также реализовать методы работы с данными, а вызывать его уже из контроллера\r\n    public Optional<Category> findById(Long id) { // этот метод не из интерфейса, его создали сами\r\n        return repository.findById(id); // А этот метод из интерфейса репозитории. Сначала извлечь, затем вызвать\r\n    }\r\n\r\n    public  List<Category> findAll(Long userId) {\r\n        return repository.findByUserId(userId);\r\n    }\r\n\r\n    public Category add(Category category) {\r\n        return repository.save(category); // Может как создать, так и обновить объект. В данном случае, создает новый объект, так как вызывается для добавления новой категории\r\n    }\r\n\r\n    public Category update(Category category) {\r\n        return repository.save(category); // Тут он обновляет уже существующую категорию\r\n    }\r\n\r\n    public void deleteById(Long id) {\r\n        repository.deleteById(id);\r\n    }\r\n\r\n    public List<Category> findByTitleOrUserId(String text, Long userId) {\r\n        return repository.findByTitleOrUserId(text, userId);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/CategoryService.java b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/CategoryService.java
+--- a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/CategoryService.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/CategoryService.java	(date 1676161526726)
+@@ -1,6 +1,8 @@
+ package ru.javabegin.springms.todo.affairs.service;
+ 
+ import javax.transaction.Transactional;
++
++import lombok.RequiredArgsConstructor;
+ import org.springframework.stereotype.Service;
+ import ru.javabegin.springms.todo.affairs.repository.CategoryRepository;
+ import ru.javabegin.springms.todo.entity.Category;
+@@ -18,15 +20,10 @@
+ 
+ @Transactional
+ @Service
++@RequiredArgsConstructor
+ public class CategoryService {
+-    // Через механизм DI создается ссылка на репозиторий, который при старте приложения подставит в эту переменную нужные класс-реализацию
+     private final CategoryRepository repository; // сервис имеет право обращаться к репозиторию (БД)
+ 
+-    // Но чтобы сработал DI, нужно создать конструктор в параметры которого передается объект репозитория(что нужно внедрить в ссылку)
+-    public CategoryService(CategoryRepository repository) { // Объект репозитория создается на лету, это берет на себя Spring
+-        this.repository = repository;
+-    }
+-
+     // Помимо ссылки на репозиторий, можно также реализовать методы работы с данными, а вызывать его уже из контроллера
+     public Optional<Category> findById(Long id) { // этот метод не из интерфейса, его создали сами
+         return repository.findById(id); // А этот метод из интерфейса репозитории. Сначала извлечь, затем вызвать
+Index: todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/PriorityService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.affairs.service;\r\n\r\nimport javax.transaction.Transactional;\r\nimport org.springframework.stereotype.Service;\r\nimport ru.javabegin.springms.todo.affairs.repository.PriorityRepository;\r\nimport ru.javabegin.springms.todo.entity.Priority;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n@Service\r\n@Transactional\r\npublic class PriorityService {\r\n    // Через механизм DI создается ссылка на репозиторий, который при старте приложения подставит в эту переменную нужные класс-реализацию\r\n    private final PriorityRepository priorityRepository; // сервис имеет право обращаться к репозиторию (БД)\r\n\r\n    // Но чтобы сработал DI, нужно создать конструктор в параметры которого передается объект репозитория(что нужно внедрить в ссылку)\r\n    public PriorityService(PriorityRepository priorityRepository) { // Объект репозитория создается на лету, это берет на себя Spring\r\n        this.priorityRepository = priorityRepository;\r\n    }\r\n\r\n    // Помимо ссылки на репозиторий, можно также реализовать методы работы с данными, а вызывать его уже из контроллера\r\n    public Optional<Priority> findById(Long id) { // этот метод не из интерфейса, его создали сами\r\n        return priorityRepository.findById(id); // А этот метод из интерфейса репозитории. Сначала извлечь, затем вызвать\r\n    }\r\n\r\n    public List<Priority> findAll(Long userId) {\r\n        return priorityRepository.findByUserIdOrderByTitle(userId);\r\n    }\r\n\r\n    public Priority add(Priority priority) {\r\n        return priorityRepository.save(priority); // Может как создать, так и обновить объект. В данном случае, создает новый объект, так как вызывается для добавления новой категории\r\n    }\r\n\r\n    public Priority update(Priority priority) {\r\n        return priorityRepository.save(priority); // Тут он обновляет уже существующую категорию\r\n    }\r\n\r\n    public void deleteById(Long id) {\r\n        priorityRepository.deleteById(id);\r\n    }\r\n\r\n    public List<Priority> findByTitleOrUserId(String text, Long userId) {\r\n        return priorityRepository.findByTitleOrUserId(text, userId);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/PriorityService.java b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/PriorityService.java
+--- a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/PriorityService.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/PriorityService.java	(date 1676161526739)
+@@ -1,6 +1,8 @@
+ package ru.javabegin.springms.todo.affairs.service;
+ 
+ import javax.transaction.Transactional;
++
++import lombok.RequiredArgsConstructor;
+ import org.springframework.stereotype.Service;
+ import ru.javabegin.springms.todo.affairs.repository.PriorityRepository;
+ import ru.javabegin.springms.todo.entity.Priority;
+@@ -10,14 +12,10 @@
+ 
+ @Service
+ @Transactional
++@RequiredArgsConstructor
+ public class PriorityService {
+-    // Через механизм DI создается ссылка на репозиторий, который при старте приложения подставит в эту переменную нужные класс-реализацию
+     private final PriorityRepository priorityRepository; // сервис имеет право обращаться к репозиторию (БД)
+ 
+-    // Но чтобы сработал DI, нужно создать конструктор в параметры которого передается объект репозитория(что нужно внедрить в ссылку)
+-    public PriorityService(PriorityRepository priorityRepository) { // Объект репозитория создается на лету, это берет на себя Spring
+-        this.priorityRepository = priorityRepository;
+-    }
+ 
+     // Помимо ссылки на репозиторий, можно также реализовать методы работы с данными, а вызывать его уже из контроллера
+     public Optional<Priority> findById(Long id) { // этот метод не из интерфейса, его создали сами
+Index: todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/StatisticService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.affairs.service;\r\n\r\nimport javax.transaction.Transactional;\r\nimport org.springframework.stereotype.Service;\r\nimport ru.javabegin.springms.todo.affairs.repository.StatisticRepository;\r\nimport ru.javabegin.springms.todo.entity.Statistic;\r\n\r\n@Service\r\n@Transactional\r\npublic class StatisticService {\r\n    StatisticRepository statisticRepository;\r\n\r\n    public StatisticService(StatisticRepository statisticRepository) {\r\n        this.statisticRepository = statisticRepository;\r\n    }\r\n\r\n    public Statistic findStatistic (Long userId) {\r\n        return statisticRepository.findByUserId(userId);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/StatisticService.java b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/StatisticService.java
+--- a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/StatisticService.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/StatisticService.java	(date 1676161526701)
+@@ -1,19 +1,18 @@
+ package ru.javabegin.springms.todo.affairs.service;
+ 
+ import javax.transaction.Transactional;
++
++import lombok.RequiredArgsConstructor;
+ import org.springframework.stereotype.Service;
+ import ru.javabegin.springms.todo.affairs.repository.StatisticRepository;
+ import ru.javabegin.springms.todo.entity.Statistic;
+ 
+ @Service
+ @Transactional
++@RequiredArgsConstructor
+ public class StatisticService {
+     StatisticRepository statisticRepository;
+ 
+-    public StatisticService(StatisticRepository statisticRepository) {
+-        this.statisticRepository = statisticRepository;
+-    }
+-
+     public Statistic findStatistic (Long userId) {
+         return statisticRepository.findByUserId(userId);
+     }
+Index: todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TaskController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.affairs.controller;\r\n\r\nimport org.springframework.beans.factory.annotation.Qualifier;\r\nimport org.springframework.data.domain.Page;\r\nimport org.springframework.data.domain.PageRequest;\r\nimport org.springframework.data.domain.Sort;\r\nimport org.springframework.http.HttpStatus;\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.web.bind.annotation.*;\r\nimport ru.javabegin.springms.todo.affairs.feign.UserFeignClient;\r\nimport ru.javabegin.springms.todo.affairs.search.TaskSearchValues;\r\nimport ru.javabegin.springms.todo.affairs.service.TaskService;\r\nimport ru.javabegin.springms.todo.entity.Task;\r\nimport ru.javabegin.springms.todo.entity.UserData;\r\nimport ru.javabegin.springms.todo.utils.webclient.UserWebClientBuilder;\r\n\r\nimport java.text.ParseException;\r\nimport java.util.Calendar;\r\nimport java.util.Date;\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n//https://javabegin.ru/courses/spring-restful/lessons/metod-dlya-poiska-zadach-post/\r\n@RestController\r\n@RequestMapping(\"/task\")\r\npublic class TaskController {\r\n    private static final String ID_COLUMN = \"id\"; // имя столбца\r\n    private final TaskService taskService;\r\n\r\n    private final UserFeignClient userFeignClient;\r\n    public TaskController(TaskService taskService, @Qualifier(\"userFeignClientFallback\") UserFeignClient userFeignClient) {\r\n        this.taskService = taskService;\r\n        this.userFeignClient = userFeignClient;\r\n    }\r\n\r\n\r\n    /**Метод POST*/\r\n    // уязвимые данные получаются через POST метод с указанием каких либо данных в тело метода\r\n    @PostMapping(\"/all\") // POST - НЕиденпотентный, то есть повторный запрос меняет состояние сервера. (Повторный тот же запрос в банк спишет повторно деньги)\r\n    public List<Task> findAll(@RequestBody Long userId) { //  в параметры email также передается в формате json, указывается аннотация для считывания этого файла\r\n        return taskService.findAll(userId);\r\n    }\r\n\r\n\r\n    /**Добавление задачи методом POST*/\r\n\r\n    @PostMapping(\"/add\") //https://www.guru99.com/put-vs-post.html\r\n    // @RequestBody в postman в body нужно отправить именно в формате JSON\r\n    public ResponseEntity<Task> add(@RequestBody Task task) { // ResponseEntity - специальный объект, содержащий статус ответа(ок, шибка и т.д., и объекты, указанные с помощью женерикс(как в данном случае))\r\n        // проверка на обязательные параметры\r\n        if(task.getId()!= null && task.getId() != 0 ) { // Это означает, что id заполнено. Значит такая категория уже существует в БД\r\n            // id создается автоматически в БД (autoincrement), поэтому его передавать не нужно\r\n\r\n            return new ResponseEntity(\"redundant param: id MUST be null\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // если передать пустое значение title\r\n        if (task.getTitle() == null || task.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов\r\n            return new ResponseEntity(\"missed param: title MUST be NOT NULL\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // проверка на наличие user вызовом другого микросервиса\r\n        /*if (userFeignClient.findUserById(task.getUserId()) != null) {\r\n            return ResponseEntity.ok(taskService.add(task));\r\n        }*/\r\n        ResponseEntity<UserData> result = userFeignClient.findUserById(task.getUserId());\r\n        if (result == null) { // если мс недоступен, возвращается null\r\n            return new ResponseEntity(\"система пользователей недоступна, попробуйте позднее!\", HttpStatus.NOT_FOUND);\r\n        }\r\n\r\n        if (result.getBody() != null) {// если пользователь не пустой\r\n            return ResponseEntity.ok(taskService.add(task));\r\n        }\r\n\r\n        // Если выполнить после асинхронного метода проверки на наличие пользователя, то независимо есть такой user или нет, будет выходить \"id не найден\". Поэтому асинхронный метод не подходит\r\n        // А синхронный дожидается ответа и далее добавляет, либо выводит, что не нашел пользователя\r\n        return new ResponseEntity(\"user id = \" + task.getUserId() + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n    }\r\n\r\n\r\n    /**Обновление задачи методом PUT*/\r\n    @PutMapping(\"/update\") // Метод идемпотентный - повторная отправка запроса не влияет на сервер\r\n    public ResponseEntity update(@RequestBody Task task) { //Будет возвращать только статус, а не объект entity, как в POST\r\n        // проверка на обязательные параметры\r\n        if(task.getId() == null && task.getId() == 0 ) { // Значит такой категории нет в БД для его обновления\r\n\r\n            return new ResponseEntity(\"missed param: id\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // если передать пустое значение title\r\n        if (task.getTitle() == null || task.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов\r\n            return new ResponseEntity(\"missed param: title MUST be NOT NULL\", HttpStatus.NOT_ACCEPTABLE); // Вызванная категория не может быть без названия\r\n        }\r\n\r\n        taskService.update(task);\r\n        return new ResponseEntity(HttpStatus.OK); // возвращает только статус 200 - ОК\r\n    }\r\n\r\n    /**Удаление задачи методом DELETE*/\r\n    // DELETE - идемпотентный метод. Удаление можно также производить через POST, причем id категории для удаления передается в body\r\n    @DeleteMapping(\"/delete/{id}\") // id категории, которую надо удалить, предается в адресной строке.\r\n    public ResponseEntity delete(@PathVariable(\"id\") Long id) {\r\n\r\n        // Применим исключение ошибки stacktrace. Через try-catch можно обработать исключение в статус\r\n        try {\r\n            taskService.deleteById(id);\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n            return new ResponseEntity(\"id = \" + id + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        return new ResponseEntity(HttpStatus.OK); // возвращает статус сервера\r\n\r\n    }\r\n\r\n    /** Поиск задачи методом POST указанным параметрам и userId пользователя*/\r\n    @PostMapping(\"/search\")\r\n    // НЕ List, а Page - для вывода коллекции постранично\r\n    public ResponseEntity<Page<Task>> search (@RequestBody TaskSearchValues taskSearchValues) throws ParseException { // Создали отдельный класс с параметрами title и email. См пакет search\r\n\r\n        // исключить NullPointerException\r\n        String title = taskSearchValues.getTitle() != null ? taskSearchValues.getTitle() : null;\r\n\r\n        // конвертируем Integer в Boolean\r\n        Boolean completed = taskSearchValues.getCompleted() != null && taskSearchValues.getCompleted() == 0 ? false : true;\r\n\r\n        Long priorityId = taskSearchValues.getPriorityId() != null ? taskSearchValues.getPriorityId() : null;\r\n        Long categoryId = taskSearchValues.getCategoryId() != null ? taskSearchValues.getCategoryId() : null;\r\n\r\n        String sortColumn = taskSearchValues.getSortColumn() != null ? taskSearchValues.getSortColumn() : null;\r\n        String sortDirection = taskSearchValues.getSortDirection() != null ? taskSearchValues.getSortDirection() : null;\r\n\r\n        Integer pageNumber = taskSearchValues.getPageNum() != null ? taskSearchValues.getPageNum() : null;\r\n        Integer pageSize = taskSearchValues.getPageSize() != null ? taskSearchValues.getPageSize() : null;\r\n\r\n        Long userId = taskSearchValues.getUserId() != null ? taskSearchValues.getUserId() : null; // для показа задач только этого пользователя\r\n\r\n\r\n        // проверка на обязательные параметры\r\n        if(userId == null || userId == 0 ){\r\n            return new ResponseEntity(\"missed param: userId \", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // Чтобы отобрать в выборке все задачи по датам, независимо от времени. Можно выставить время от 00:00 до 23:59\r\n\r\n        Date dateFrom = null;\r\n        Date dateTo = null;\r\n\r\n        // выставить время с 00:00 для начальной даты (если она указана)\r\n\r\n        if(taskSearchValues.getDateFrom() != null) {\r\n            Calendar calendarFrom = Calendar.getInstance(); // Calendar - специальный объект для работы с датой и времен с учетом часового пояса автоматически\r\n            calendarFrom.setTime(taskSearchValues.getDateFrom());\r\n            calendarFrom.set(Calendar.HOUR_OF_DAY, 0);\r\n            calendarFrom.set(Calendar.MINUTE, 1);\r\n            calendarFrom.set(Calendar.SECOND, 1);\r\n            calendarFrom.set(Calendar.MILLISECOND, 1);\r\n\r\n            dateFrom = calendarFrom.getTime();\r\n        }\r\n\r\n        // выставить время с 23:59 для начальной даты (если она указана)\r\n        if(taskSearchValues.getDateTo() != null) {\r\n            Calendar calendarTo = Calendar.getInstance(); // Calendar - специальный объект для работы с датой и времен с учетом часового пояса автоматически\r\n            calendarTo.setTime(taskSearchValues.getDateTo());\r\n            calendarTo.set(Calendar.HOUR_OF_DAY, 23);\r\n            calendarTo.set(Calendar.MINUTE, 59);\r\n            calendarTo.set(Calendar.SECOND, 59);\r\n            calendarTo.set(Calendar.MILLISECOND, 999);\r\n\r\n            dateTo = calendarTo.getTime();\r\n        }\r\n\r\n        // Далее считываем направление сортировки\r\n\r\n        // НАПРАВЛЕНИЕ\r\n        //Direction - enum, содержащий два параметра - ASC и DESC - прямой и обратный порядок\r\n        Sort.Direction direction = sortDirection == null || sortDirection.trim().length() == 0 || sortDirection.trim().equals(\"asc\") ? Sort.Direction.ASC : Sort.Direction.DESC;\r\n\r\n        /*\r\n        Вторым полем для сортировки добавляем id, чтобы всегда сохранялся строгий порядок.\r\n        Например, если у двух задач одинаковое значение приоритета, тогда сортировка будет по полю.\r\n        Порядок следования этих дух записей может каждый раз меняться после выполнения запроса, т.к. не указано второе поле сортировки.\r\n        Поэтому и используем ID_COLUMN, чтобы если попадутся несколько одинаковых названий задач, или задач с одинаковыми приоритетами или категориями, сортировка была по id*/\r\n\r\n        // СОРТИРОВКА, которая содержит столбец и направление\r\n        Sort sort = Sort.by(direction, sortColumn, ID_COLUMN);// сортируется направление сперва по полю столбца, если одинаковые столбцы, то сортировка будет по полю ID\r\n\r\n        // Объект постраничности\r\n        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);\r\n\r\n        //pageRequest передаем в result в качестве параметра для метода findByParam, чтобы\r\n        // springboot понимал какой запрос выполнить, что сортировать и т.д.\r\n\r\n        // Результат запроса с постраничным выводом\r\n        Page<Task> result = taskService.findByParam(title, completed, categoryId, priorityId, userId, dateFrom, dateTo, pageRequest);\r\n        return ResponseEntity.ok(result);\r\n    }\r\n\r\n    /**Поиск задачи по ID методом POST*/\r\n    @PostMapping(\"/searchById\") // ID передаем в тело метода - безопасно\r\n    public ResponseEntity<Task> findById(@RequestBody Long id) {\r\n        Optional<Task> task = taskService.findById(id);\r\n        try {\r\n            if(task.isPresent()) { // если объект найден\r\n                return ResponseEntity.ok(task.get());\r\n            }\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n        return new ResponseEntity(\"id = \" + id + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TaskController.java b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TaskController.java
+--- a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TaskController.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TaskController.java	(date 1676159016758)
+@@ -1,5 +1,6 @@
+ package ru.javabegin.springms.todo.affairs.controller;
+ 
++import lombok.RequiredArgsConstructor;
+ import org.springframework.beans.factory.annotation.Qualifier;
+ import org.springframework.data.domain.Page;
+ import org.springframework.data.domain.PageRequest;
+@@ -20,23 +21,17 @@
+ import java.util.List;
+ import java.util.Optional;
+ 
+-//https://javabegin.ru/courses/spring-restful/lessons/metod-dlya-poiska-zadach-post/
+ @RestController
+ @RequestMapping("/task")
++@RequiredArgsConstructor
+ public class TaskController {
+     private static final String ID_COLUMN = "id"; // имя столбца
+     private final TaskService taskService;
+ 
+     private final UserFeignClient userFeignClient;
+-    public TaskController(TaskService taskService, @Qualifier("userFeignClientFallback") UserFeignClient userFeignClient) {
+-        this.taskService = taskService;
+-        this.userFeignClient = userFeignClient;
+-    }
+-
+ 
+     /**Метод POST*/
+-    // уязвимые данные получаются через POST метод с указанием каких либо данных в тело метода
+-    @PostMapping("/all") // POST - НЕиденпотентный, то есть повторный запрос меняет состояние сервера. (Повторный тот же запрос в банк спишет повторно деньги)
++    @PostMapping("/all")
+     public List<Task> findAll(@RequestBody Long userId) { //  в параметры email также передается в формате json, указывается аннотация для считывания этого файла
+         return taskService.findAll(userId);
+     }
+@@ -44,25 +39,20 @@
+ 
+     /**Добавление задачи методом POST*/
+ 
+-    @PostMapping("/add") //https://www.guru99.com/put-vs-post.html
+-    // @RequestBody в postman в body нужно отправить именно в формате JSON
+-    public ResponseEntity<Task> add(@RequestBody Task task) { // ResponseEntity - специальный объект, содержащий статус ответа(ок, шибка и т.д., и объекты, указанные с помощью женерикс(как в данном случае))
++    @PostMapping("/add")
++    public ResponseEntity<Task> add(@RequestBody Task task) {
++
+         // проверка на обязательные параметры
+-        if(task.getId()!= null && task.getId() != 0 ) { // Это означает, что id заполнено. Значит такая категория уже существует в БД
+-            // id создается автоматически в БД (autoincrement), поэтому его передавать не нужно
++        if(task.getId()!= null && task.getId() != 0 ) {
+ 
+             return new ResponseEntity("redundant param: id MUST be null", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+         // если передать пустое значение title
+-        if (task.getTitle() == null || task.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов
++        if (task.getTitle() == null || task.getTitle().trim().length() == 0) {
+             return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+-        // проверка на наличие user вызовом другого микросервиса
+-        /*if (userFeignClient.findUserById(task.getUserId()) != null) {
+-            return ResponseEntity.ok(taskService.add(task));
+-        }*/
+         ResponseEntity<UserData> result = userFeignClient.findUserById(task.getUserId());
+         if (result == null) { // если мс недоступен, возвращается null
+             return new ResponseEntity("система пользователей недоступна, попробуйте позднее!", HttpStatus.NOT_FOUND);
+@@ -72,24 +62,25 @@
+             return ResponseEntity.ok(taskService.add(task));
+         }
+ 
+-        // Если выполнить после асинхронного метода проверки на наличие пользователя, то независимо есть такой user или нет, будет выходить "id не найден". Поэтому асинхронный метод не подходит
++        // Если выполнить после асинхронного метода проверки на наличие пользователя, то независимо есть такой user или нет,
++        // будет выходить "id не найден". Поэтому асинхронный метод не подходит
+         // А синхронный дожидается ответа и далее добавляет, либо выводит, что не нашел пользователя
+         return new ResponseEntity("user id = " + task.getUserId() + " not found", HttpStatus.NOT_ACCEPTABLE);
+     }
+ 
+ 
+     /**Обновление задачи методом PUT*/
+-    @PutMapping("/update") // Метод идемпотентный - повторная отправка запроса не влияет на сервер
+-    public ResponseEntity update(@RequestBody Task task) { //Будет возвращать только статус, а не объект entity, как в POST
++    @PutMapping("/update")
++    public ResponseEntity update(@RequestBody Task task) { //
+         // проверка на обязательные параметры
+-        if(task.getId() == null && task.getId() == 0 ) { // Значит такой категории нет в БД для его обновления
++        if(task.getId() == null && task.getId() == 0 ) { //
+ 
+             return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+         // если передать пустое значение title
+-        if (task.getTitle() == null || task.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов
+-            return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE); // Вызванная категория не может быть без названия
++        if (task.getTitle() == null || task.getTitle().trim().length() == 0) {
++            return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+         taskService.update(task);
+@@ -97,11 +88,9 @@
+     }
+ 
+     /**Удаление задачи методом DELETE*/
+-    // DELETE - идемпотентный метод. Удаление можно также производить через POST, причем id категории для удаления передается в body
+-    @DeleteMapping("/delete/{id}") // id категории, которую надо удалить, предается в адресной строке.
++    @DeleteMapping("/delete/{id}") //
+     public ResponseEntity delete(@PathVariable("id") Long id) {
+ 
+-        // Применим исключение ошибки stacktrace. Через try-catch можно обработать исключение в статус
+         try {
+             taskService.deleteById(id);
+         } catch (Exception e) {
+@@ -116,7 +105,7 @@
+     /** Поиск задачи методом POST указанным параметрам и userId пользователя*/
+     @PostMapping("/search")
+     // НЕ List, а Page - для вывода коллекции постранично
+-    public ResponseEntity<Page<Task>> search (@RequestBody TaskSearchValues taskSearchValues) throws ParseException { // Создали отдельный класс с параметрами title и email. См пакет search
++    public ResponseEntity<Page<Task>> search (@RequestBody TaskSearchValues taskSearchValues) { // Создали отдельный класс с параметрами title и email. См пакет search
+ 
+         // исключить NullPointerException
+         String title = taskSearchValues.getTitle() != null ? taskSearchValues.getTitle() : null;
+@@ -198,7 +187,7 @@
+     }
+ 
+     /**Поиск задачи по ID методом POST*/
+-    @PostMapping("/searchById") // ID передаем в тело метода - безопасно
++    @PostMapping("/searchById")
+     public ResponseEntity<Task> findById(@RequestBody Long id) {
+         Optional<Task> task = taskService.findById(id);
+         try {
+Index: todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.users.controller;\r\n\r\nimport org.springframework.data.domain.Page;\r\nimport org.springframework.data.domain.PageRequest;\r\nimport org.springframework.data.domain.Sort;\r\nimport org.springframework.http.HttpStatus;\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.stereotype.Controller;\r\nimport org.springframework.web.bind.annotation.*;\r\nimport ru.javabegin.springms.todo.entity.UserData;\r\nimport ru.javabegin.springms.todo.users.mq.functionalcode.MessageOutFunc;\r\n//import ru.javabegin.springms.todo.users.mq.legacy.MessagePublisher;\r\nimport ru.javabegin.springms.todo.users.search.UserSearchValues;\r\nimport ru.javabegin.springms.todo.users.service.UserService;\r\nimport ru.javabegin.springms.todo.utils.webclient.UserWebClientBuilder;\r\n\r\n\r\nimport java.text.ParseException;\r\nimport java.util.Optional;\r\n\r\n@Controller\r\n@RequestMapping(\"/users\")\r\npublic class UserController {\r\n    private final UserService userService;\r\n    private final UserWebClientBuilder userWebClientBuilder;\r\n\r\n    //    private MessagePublisher messagePublisher; // для применения legacy\r\n    private MessageOutFunc messagePublisher;\r\n\r\n    private static final String ID_COLUMN = \"id\"; // имя столбца\r\n\r\n    public UserController(UserService userService, UserWebClientBuilder userWebClientBuilder, MessageOutFunc messagePublisher) {\r\n        this.userService = userService;\r\n        this.userWebClientBuilder = userWebClientBuilder;\r\n        this.messagePublisher = messagePublisher;\r\n    }\r\n\r\n    /**\r\n     * Удаление user методом DELETE\r\n     */\r\n    // DELETE - идемпотентный метод. Удаление можно также производить через POST, причем id категории для удаления передается в body\r\n    @DeleteMapping(\"/delete/{id}\") // id категории, которую надо удалить, предается в адресной строке.\r\n    public ResponseEntity delete(@PathVariable(\"id\") Long id) {\r\n\r\n        // Применим исключение ошибки stacktrace. Через try-catch можно обработать исключение в статус\r\n        try {\r\n            userService.deleteById(id);\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n            return new ResponseEntity(\"id = \" + id + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        return new ResponseEntity(HttpStatus.OK); // возвращает статус сервера\r\n    }\r\n\r\n    /**\r\n     * Добавление user методом POST\r\n     */\r\n\r\n    @PostMapping(\"/add\")\r\n    public ResponseEntity<UserData> add(@RequestBody UserData user) {\r\n\r\n        // проверка на обязательные параметры\r\n        if (user.getId() != null && user.getId() != 0) {\r\n            // id создается автоматически в БД (autoincrement), поэтому его передавать не нужно, иначе может быть конфликт уникальности значения\r\n            return new ResponseEntity(\"redundant param: id MUST be null\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // если передали пустое значение\r\n        if (user.getEmail() == null || user.getEmail().trim().length() == 0) {\r\n            return new ResponseEntity(\"missed param: email\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        if (user.getPassword() == null || user.getPassword().trim().length() == 0) {\r\n            return new ResponseEntity(\"missed param: password\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        if (user.getUsername() == null || user.getUsername().trim().length() == 0) {\r\n            return new ResponseEntity(\"missed param: username\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // добавляем пользователя\r\n        user = userService.add(user);\r\n\r\n\r\n        // создание тестовых данных для нового user через асинхронный вызов другого мс\r\n\r\n        /* if (user != null) {\r\n           // заполняем начальные данные пользователя (в параллельном потоке)\r\n            userWebClientBuilder.initUserData(user.getId()).subscribe(result -> {\r\n                        System.out.println(\"user populated: \" + result);\r\n                    }\r\n            );*/\r\n\r\n        // создание тестовых данных для нового user через отправку сообщения в message broker(mq) - это асинхронный вызов\r\n        messagePublisher.sendMessage(user.getId()); // отправка сообщения по каналу отправки, что user создан\r\n\r\n        return ResponseEntity.ok(user); // возвращаем созданный объект со сгенерированным id\r\n\r\n    }\r\n\r\n\r\n    /**\r\n     * Обновление категории методом PUT\r\n     */\r\n    @PutMapping(\"/update\") // Метод идемпотентный - повторная отправка запроса не влияет на сервер\r\n    public ResponseEntity update(@RequestBody UserData user) { //Будет возвращать только статус, а не объект entity, как в POST\r\n        // проверка на обязательные параметры\r\n        if (user.getId() == null && user.getId() == 0) { // Значит такого пользователя нет в БД для его обновления\r\n\r\n            return new ResponseEntity(\"missed param: id\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // если передать пустое значение email, username, password\r\n        if (user.getEmail() == null || user.getEmail().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов\r\n            return new ResponseEntity(\"missed param: email MUST be NOT NULL\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n        if (user.getUsername() == null || user.getUsername().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов\r\n            return new ResponseEntity(\"missed param: email MUST be NOT NULL\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n        if (user.getPassword() == null || user.getPassword().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов\r\n            return new ResponseEntity(\"missed param: email MUST be NOT NULL\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        userService.update(user);\r\n        return new ResponseEntity(HttpStatus.OK); // возвращает только статус 200 - ОК\r\n    }\r\n\r\n    /**\r\n     * Поиск user по ID методом POST\r\n     */\r\n    @PostMapping(\"/findById\") // ID передаем в тело метода - безопасно\r\n    public ResponseEntity<UserData> findById(@RequestBody Long id) {\r\n        Optional<UserData> user = userService.findById(id);\r\n        try {\r\n            if (user.isPresent()) { // если объект найден\r\n                return ResponseEntity.ok(user.get());\r\n            }\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n        return new ResponseEntity(\"id = \" + id + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n    }\r\n\r\n    /**\r\n     * Поиск user по email и username методом POST\r\n     */\r\n    @PostMapping(\"/searchByEmailOrUsername\")\r\n    public ResponseEntity<UserData> findByEmailOrUsername(@RequestBody UserSearchValues userSearchValues) {\r\n        if ((userSearchValues.getEmail() == null || userSearchValues.getEmail().trim().length() == 0)\r\n                && (userSearchValues.getUsername() == null || userSearchValues.getUsername().trim().length() == 0)) {\r\n            return new ResponseEntity(\"missed param: email or username\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        UserData user;\r\n        try {\r\n            user = userService.findByEmailOrUsername(userSearchValues.getEmail(), userSearchValues.getUsername());\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n            return new ResponseEntity(\"email = \" + userSearchValues.getEmail() + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        return ResponseEntity.ok(user);\r\n    }\r\n\r\n\r\n    /**\r\n     * Удаление user по email методом POST\r\n     */\r\n    @PostMapping(\"/deleteByEmail\")\r\n    public ResponseEntity<UserData> deleteByEmail(@RequestBody String email) {\r\n\r\n        try {\r\n            userService.deleteByEmail(email);\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n            return new ResponseEntity(\"email = \" + email + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n        return new ResponseEntity(HttpStatus.OK);\r\n    }\r\n\r\n\r\n    /**\r\n     * Поиск категории методом POST указанным параметрам и userId пользователя\r\n     */\r\n    @PostMapping(\"/searchByParam\")\r\n    // НЕ List, а Page - для вывода коллекции постранично\r\n    public ResponseEntity<Page<UserData>> search(@RequestBody UserSearchValues userSearchValues) throws ParseException { // Создали отдельный класс с параметрами title и email. См пакет search\r\n\r\n        // исключить NullPointerException\r\n        String email = userSearchValues.getEmail() != null ? userSearchValues.getEmail() : null;\r\n        String username = userSearchValues.getUsername() != null ? userSearchValues.getUsername() : null;\r\n\r\n        String sortColumn = userSearchValues.getSortColumn() != null ? userSearchValues.getSortColumn() : null;\r\n        String sortDirection = userSearchValues.getSortDirection() != null ? userSearchValues.getSortDirection() : null;\r\n\r\n        Integer pageNumber = userSearchValues.getPageNum() != null ? userSearchValues.getPageNum() : null;\r\n        Integer pageSize = userSearchValues.getPageSize() != null ? userSearchValues.getPageSize() : null;\r\n\r\n        Long id = userSearchValues.getId() != null ? userSearchValues.getId() : null;\r\n\r\n        // Далее считываем направление сортировки\r\n\r\n        // НАПРАВЛЕНИЕ\r\n        //Direction - enum, содержащий два параметра - ASC и DESC - прямой и обратный порядок\r\n        Sort.Direction direction = sortDirection == null || sortDirection.trim().length() == 0 || sortDirection.trim().equals(\"asc\") ? Sort.Direction.ASC : Sort.Direction.DESC;\r\n\r\n        /*\r\n        Вторым полем для сортировки добавляем id, чтобы всегда сохранялся строгий порядок.\r\n        Например, если у двух задач одинаковое значение приоритета, тогда сортировка будет по полю.\r\n        Порядок следования этих дух записей может каждый раз меняться после выполнения запроса, т.к. не указано второе поле сортировки.\r\n        Поэтому и используем ID_COLUMN, чтобы если попадутся несколько одинаковых названий задач, или задач с одинаковыми приоритетами или категориями, сортировка была по id*/\r\n\r\n        // СОРТИРОВКА, которая содержит столбец и направление\r\n        Sort sort = Sort.by(direction, sortColumn, ID_COLUMN);// сортируется направление сперва по полю столбца, если одинаковые столбцы, то сортировка будет по полю ID\r\n\r\n        // Объект постраничности\r\n        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);\r\n\r\n        //pageRequest передаем в result в качестве параметра для метода findByParam, чтобы\r\n        // springboot понимал какой запрос выполнить, что сортировать и т.д.\r\n\r\n        // Результат запроса с постраничным выводом\r\n        Page<UserData> result = userService.findByParam(username, email, id, pageRequest);\r\n        return ResponseEntity.ok(result);\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java b/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java
+--- a/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java	(date 1676159551179)
+@@ -1,5 +1,6 @@
+ package ru.javabegin.springms.todo.users.controller;
+ 
++import lombok.RequiredArgsConstructor;
+ import org.springframework.data.domain.Page;
+ import org.springframework.data.domain.PageRequest;
+ import org.springframework.data.domain.Sort;
+@@ -20,21 +21,16 @@
+ 
+ @Controller
+ @RequestMapping("/users")
++@RequiredArgsConstructor
+ public class UserController {
+     private final UserService userService;
+-    private final UserWebClientBuilder userWebClientBuilder;
++//    private final UserWebClientBuilder userWebClientBuilder;
+ 
+-    //    private MessagePublisher messagePublisher; // для применения legacy
+-    private MessageOutFunc messagePublisher;
++//    private MessagePublisher messagePublisher; // для применения legacy
++    private final MessageOutFunc messagePublisher;
+ 
+     private static final String ID_COLUMN = "id"; // имя столбца
+ 
+-    public UserController(UserService userService, UserWebClientBuilder userWebClientBuilder, MessageOutFunc messagePublisher) {
+-        this.userService = userService;
+-        this.userWebClientBuilder = userWebClientBuilder;
+-        this.messagePublisher = messagePublisher;
+-    }
+-
+     /**
+      * Удаление user методом DELETE
+      */
+@@ -62,7 +58,8 @@
+ 
+         // проверка на обязательные параметры
+         if (user.getId() != null && user.getId() != 0) {
+-            // id создается автоматически в БД (autoincrement), поэтому его передавать не нужно, иначе может быть конфликт уникальности значения
++            // id создается автоматически в БД (autoincrement), поэтому его передавать не нужно,
++            // иначе может быть конфликт уникальности значения
+             return new ResponseEntity("redundant param: id MUST be null", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+@@ -101,24 +98,25 @@
+ 
+ 
+     /**
+-     * Обновление категории методом PUT
++     * Обновление user методом PUT
+      */
+-    @PutMapping("/update") // Метод идемпотентный - повторная отправка запроса не влияет на сервер
+-    public ResponseEntity update(@RequestBody UserData user) { //Будет возвращать только статус, а не объект entity, как в POST
++    @PutMapping("/update")
++    public ResponseEntity update(@RequestBody UserData user) {
++
+         // проверка на обязательные параметры
+-        if (user.getId() == null && user.getId() == 0) { // Значит такого пользователя нет в БД для его обновления
++        if (user.getId() == null && user.getId() == 0) {
+ 
+             return new ResponseEntity("missed param: id", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+         // если передать пустое значение email, username, password
+-        if (user.getEmail() == null || user.getEmail().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов
++        if (user.getEmail() == null || user.getEmail().trim().length() == 0) {
+             return new ResponseEntity("missed param: email MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE);
+         }
+-        if (user.getUsername() == null || user.getUsername().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов
++        if (user.getUsername() == null || user.getUsername().trim().length() == 0) {
+             return new ResponseEntity("missed param: email MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE);
+         }
+-        if (user.getPassword() == null || user.getPassword().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов
++        if (user.getPassword() == null || user.getPassword().trim().length() == 0) {
+             return new ResponseEntity("missed param: email MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+@@ -129,7 +127,7 @@
+     /**
+      * Поиск user по ID методом POST
+      */
+-    @PostMapping("/findById") // ID передаем в тело метода - безопасно
++    @PostMapping("/findById")
+     public ResponseEntity<UserData> findById(@RequestBody Long id) {
+         Optional<UserData> user = userService.findById(id);
+         try {
+@@ -185,7 +183,7 @@
+      */
+     @PostMapping("/searchByParam")
+     // НЕ List, а Page - для вывода коллекции постранично
+-    public ResponseEntity<Page<UserData>> search(@RequestBody UserSearchValues userSearchValues) throws ParseException { // Создали отдельный класс с параметрами title и email. См пакет search
++    public ResponseEntity<Page<UserData>> search(@RequestBody UserSearchValues userSearchValues) { // ParseException? // Создали отдельный класс с параметрами title и email. См пакет search
+ 
+         // исключить NullPointerException
+         String email = userSearchValues.getEmail() != null ? userSearchValues.getEmail() : null;
+@@ -205,22 +203,12 @@
+         //Direction - enum, содержащий два параметра - ASC и DESC - прямой и обратный порядок
+         Sort.Direction direction = sortDirection == null || sortDirection.trim().length() == 0 || sortDirection.trim().equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+ 
+-        /*
+-        Вторым полем для сортировки добавляем id, чтобы всегда сохранялся строгий порядок.
+-        Например, если у двух задач одинаковое значение приоритета, тогда сортировка будет по полю.
+-        Порядок следования этих дух записей может каждый раз меняться после выполнения запроса, т.к. не указано второе поле сортировки.
+-        Поэтому и используем ID_COLUMN, чтобы если попадутся несколько одинаковых названий задач, или задач с одинаковыми приоритетами или категориями, сортировка была по id*/
+-
+         // СОРТИРОВКА, которая содержит столбец и направление
+         Sort sort = Sort.by(direction, sortColumn, ID_COLUMN);// сортируется направление сперва по полю столбца, если одинаковые столбцы, то сортировка будет по полю ID
+ 
+         // Объект постраничности
+         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
+ 
+-        //pageRequest передаем в result в качестве параметра для метода findByParam, чтобы
+-        // springboot понимал какой запрос выполнить, что сортировать и т.д.
+-
+-        // Результат запроса с постраничным выводом
+         Page<UserData> result = userService.findByParam(username, email, id, pageRequest);
+         return ResponseEntity.ok(result);
+     }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"26be85a9-7a9c-452a-9b0a-33267ec9ac73\" name=\"Changes\" comment=\"Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated).\">\r\n      <change afterPath=\"$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/README.txt\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/information_schema.FNRwLQ.meta\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/information_schema.FNRwLQ.meta\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/pg_catalog.0S1ZNQ.meta\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/pg_catalog.0S1ZNQ.meta\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/users.CI6mBg.meta\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/users.CI6mBg.meta\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/affairs.ytAVvw.meta\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/affairs.ytAVvw.meta\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/information_schema.FNRwLQ.meta\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/information_schema.FNRwLQ.meta\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/pg_catalog.0S1ZNQ.meta\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/pg_catalog.0S1ZNQ.meta\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/public.abK9xQ.meta\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/public.abK9xQ.meta\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/DeadLetterQueueException.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/DeadLetterQueueException.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/MessageConsumer.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/MessageConsumer.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/TodoInBindings.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/TodoInBindings.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/MessagePublisher.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/legacy/MessagePublisher.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/TodoOutBinding.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/legacy/TodoOutBinding.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ComposerSettings\">\r\n    <execution />\r\n  </component>\r\n  <component name=\"ExternalProjectsData\">\r\n    <projectState path=\"$PROJECT_DIR$/../../SoursesFromCourses/planner-microservices/planner-utils\">\r\n      <ProjectState />\r\n    </projectState>\r\n    <projectState path=\"$PROJECT_DIR$\">\r\n      <ProjectState />\r\n    </projectState>\r\n    <projectState path=\"$PROJECT_DIR$/todo-users\">\r\n      <ProjectState />\r\n    </projectState>\r\n    <projectState path=\"$PROJECT_DIR$/todo-utils\">\r\n      <ProjectState />\r\n    </projectState>\r\n  </component>\r\n  <component name=\"ExternalProjectsManager\">\r\n    <system id=\"GRADLE\">\r\n      <state>\r\n        <task path=\"$PROJECT_DIR$\">\r\n          <activation />\r\n        </task>\r\n        <task path=\"$PROJECT_DIR$/todo-affairs\">\r\n          <activation />\r\n        </task>\r\n        <task path=\"$PROJECT_DIR$/todo-affairs/todo-entity\">\r\n          <activation />\r\n        </task>\r\n        <projects_view>\r\n          <tree_state>\r\n            <expand>\r\n              <path>\r\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\r\n                <item name=\"todo-microservices\" type=\"f1a62948:ProjectNode\" />\r\n              </path>\r\n            </expand>\r\n            <select />\r\n          </tree_state>\r\n        </projects_view>\r\n      </state>\r\n    </system>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Interface\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"JpbToolWindowState\">\r\n    <option name=\"isToolWindowVisible\" value=\"false\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2L0bNrLzfFatyhJm1Y27QHGN9yS\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RequestMappingsPanelOrder0\": \"0\",\r\n    \"RequestMappingsPanelOrder1\": \"1\",\r\n    \"RequestMappingsPanelWidth0\": \"75\",\r\n    \"RequestMappingsPanelWidth1\": \"75\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"WebServerToolWindowFactoryState\": \"false\",\r\n    \"jdk.selected.JAVA_MODULE\": \"18\",\r\n    \"last_opened_file_path\": \"C:/JavaBegin/Spring/todo-microservices\",\r\n    \"project.structure.last.edited\": \"Modules\",\r\n    \"project.structure.proportion\": \"0.15\",\r\n    \"project.structure.side.proportion\": \"0.2\",\r\n    \"settings.editor.selected.configurable\": \"File.Encoding\",\r\n    \"spring.configuration.checksum\": \"02a7ebb24e9cccc3e4279ac7f7da60d6\"\r\n  },\r\n  \"keyToStringList\": {\r\n    \"DatabaseDriversLRU\": [\r\n      \"postgresql\"\r\n    ]\r\n  }\r\n}]]></component>\r\n  <component name=\"ReactorSettings\">\r\n    <option name=\"notificationShown\" value=\"true\" />\r\n  </component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\JavaBegin\\Spring\\todo-microservices\\todo-users\" />\r\n      <recent name=\"C:\\JavaBegin\\Spring\\todo-microservices\\todo-utils\" />\r\n      <recent name=\"C:\\JavaBegin\\Spring\\todo-microservices\" />\r\n      <recent name=\"C:\\JavaBegin\\Spring\\todo-microservices\\todo-utils\\src\" />\r\n      <recent name=\"C:\\JavaBegin\\Spring\\todo-microservices\\todo-affairs\\src\\main\\java\\ru\\javabegin\\springms\\todo\\affairs\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\JavaBegin\\Spring\\todo-microservices\" />\r\n      <recent name=\"C:\\JavaBegin\\Spring\\todo-microservices\\todo-utils\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"ru.javabegin.springms.todo.utils.aspect\" />\r\n      <recent name=\"ru.javabegin.spting.todo.utils.aspect\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunDashboard\">\r\n    <option name=\"configurationTypes\">\r\n      <set>\r\n        <option value=\"SpringBootApplicationConfigurationType\" />\r\n      </set>\r\n    </option>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Spring Boot.PlannerUsersApplication\">\r\n    <configuration name=\"PlannerGatewayApplication  | #1\" type=\"HttpClient.HttpRequestRunConfigurationType\" factoryName=\"HTTP Request\" temporary=\"true\" nameIsGenerated=\"true\" path=\"$APPLICATION_CONFIG_DIR$/scratches/PlannerGatewayApplication .http\" requestIdentifier=\"#1\" runType=\"Run single request\">\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"PlannerConfigApplication \" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\">\r\n      <option name=\"ACTIVE_PROFILES\" />\r\n      <module name=\"todo-config.main\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"ru.javabegin.springms.todo.config.PlannerConfigApplication\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"PlannerEntityApplication\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\">\r\n      <module name=\"todo-entity.main\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"ru.javabegin.springms.todo.PlannerEntityApplication\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"PlannerGatewayApplication \" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\">\r\n      <option name=\"ACTIVE_PROFILES\" />\r\n      <module name=\"todo-gateway.main\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"ru.javabegin.springms.todo.gateway.PlannerGatewayApplication\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"PlannerServerApplication \" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\">\r\n      <option name=\"ACTIVE_PROFILES\" />\r\n      <module name=\"todo-server.main\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"ru.javabegin.springms.todo.server.PlannerServerApplication\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"PlannerTodoApplication \" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\">\r\n      <option name=\"ACTIVE_PROFILES\" />\r\n      <module name=\"todo-affairs.main\" />\r\n      <option name=\"SHORTEN_COMMAND_LINE\" value=\"ARGS_FILE\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"ru.javabegin.springms.todo.affairs.PlannerTodoApplication\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"PlannerUsersApplication\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"todo-users.main\" />\r\n      <option name=\"SHORTEN_COMMAND_LINE\" value=\"ARGS_FILE\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"ru.javabegin.springms.todo.users.PlannerUsersApplication\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"ru.javabegin.springms.todo.users.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"TodoUtilsApplication\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\">\r\n      <module name=\"todo-util.main\" />\r\n      <option name=\"SHORTEN_COMMAND_LINE\" value=\"ARGS_FILE\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"ru.javabegin.springms.todo.utils.TodoUtilsApplication\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\">\r\n      <option name=\"SHORTEN_COMMAND_LINE\" value=\"ARGS_FILE\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <list>\r\n      <item itemvalue=\"HTTP Request.PlannerGatewayApplication  | #1\" />\r\n      <item itemvalue=\"Spring Boot.PlannerConfigApplication \" />\r\n      <item itemvalue=\"Spring Boot.TodoUtilsApplication\" />\r\n      <item itemvalue=\"Spring Boot.PlannerEntityApplication\" />\r\n      <item itemvalue=\"Spring Boot.PlannerGatewayApplication \" />\r\n      <item itemvalue=\"Spring Boot.PlannerServerApplication \" />\r\n      <item itemvalue=\"Spring Boot.PlannerTodoApplication \" />\r\n      <item itemvalue=\"Spring Boot.PlannerUsersApplication\" />\r\n    </list>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Spring Boot.PlannerUsersApplication\" />\r\n        <item itemvalue=\"HTTP Request.PlannerGatewayApplication  | #1\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"26be85a9-7a9c-452a-9b0a-33267ec9ac73\" name=\"Changes\" comment=\"\" />\r\n      <created>1675010909253</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1675010909253</updated>\r\n      <workItem from=\"1675010910652\" duration=\"4807000\" />\r\n      <workItem from=\"1675076465521\" duration=\"107000\" />\r\n      <workItem from=\"1675076582310\" duration=\"618000\" />\r\n      <workItem from=\"1675077378798\" duration=\"1548000\" />\r\n      <workItem from=\"1675079401752\" duration=\"562000\" />\r\n      <workItem from=\"1675079978088\" duration=\"12695000\" />\r\n      <workItem from=\"1675164709998\" duration=\"57373000\" />\r\n      <workItem from=\"1675613325173\" duration=\"28906000\" />\r\n      <workItem from=\"1676056840318\" duration=\"8037000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated).\">\r\n      <created>1675903944213</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1675903944213</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated).\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated).\" />\r\n  </component>\r\n  <component name=\"XSLT-Support.FileAssociations.UIState\">\r\n    <expand />\r\n    <select />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/.idea/workspace.xml	(date 1676162600024)
+@@ -4,24 +4,22 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="26be85a9-7a9c-452a-9b0a-33267ec9ac73" name="Changes" comment="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated).">
+-      <change afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/README.txt" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/information_schema.FNRwLQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/information_schema.FNRwLQ.meta" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/pg_catalog.0S1ZNQ.meta" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/users.CI6mBg.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/3ff9a537-3424-4c31-922b-ee741f228349/storage_v2/_src_/database/todo_users.z4x_Jw/schema/users.CI6mBg.meta" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/affairs.ytAVvw.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/affairs.ytAVvw.meta" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/information_schema.FNRwLQ.meta" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/pg_catalog.0S1ZNQ.meta" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/53a17770-c8c6-455a-90cb-d94d218a0f73/storage_v2/_src_/database/todo_affairs.0TmqDQ/schema/public.abK9xQ.meta" afterDir="false" />
++    <list default="true" id="26be85a9-7a9c-452a-9b0a-33267ec9ac73" name="Changes" comment="Добавлен способ отправки сообщений через функциональный код">
++      <change beforePath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.lock" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/DeadLetterQueueException.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/DeadLetterQueueException.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/MessageConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/MessageConsumer.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/TodoInBindings.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/mq/legacy/TodoInBindings.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/CategoryController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/PriorityController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/PriorityController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/StatisticController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/StatisticController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TaskController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TestDataController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/TestDataController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/CategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/CategoryService.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/PriorityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/PriorityService.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/StatisticService.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/StatisticService.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TaskService.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TestDataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TestDataService.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-config/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/todo-config/src/main/resources/application.properties" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/controller/UserController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/MessagePublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/legacy/MessagePublisher.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/TodoOutBinding.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/legacy/TodoOutBinding.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/functionalcode/MessageOutChannel.java" beforeDir="false" afterPath="$PROJECT_DIR$/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/functionalcode/MessageOutChannel.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -249,7 +247,7 @@
+       <workItem from="1675079978088" duration="12695000" />
+       <workItem from="1675164709998" duration="57373000" />
+       <workItem from="1675613325173" duration="28906000" />
+-      <workItem from="1676056840318" duration="8037000" />
++      <workItem from="1676056840318" duration="14776000" />
+     </task>
+     <task id="LOCAL-00001" summary="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated).">
+       <created>1675903944213</created>
+@@ -258,7 +256,21 @@
+       <option name="project" value="LOCAL" />
+       <updated>1675903944213</updated>
+     </task>
+-    <option name="localTasksCounter" value="2" />
++    <task id="LOCAL-00002" summary="Добавлен способ отправки сообщений через функциональный код">
++      <created>1676065026166</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1676065026166</updated>
++    </task>
++    <task id="LOCAL-00003" summary="Добавлен способ отправки сообщений через функциональный код">
++      <created>1676065124946</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1676065124946</updated>
++    </task>
++    <option name="localTasksCounter" value="4" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -277,7 +289,8 @@
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated)." />
+-    <option name="LAST_COMMIT_MESSAGE" value="Собран backend микросервисного приложения &quot;Planner&quot; с применением брокера сообщений RabbitMQ на основе annotation-based binding names(deprecated)." />
++    <MESSAGE value="Добавлен способ отправки сообщений через функциональный код" />
++    <option name="LAST_COMMIT_MESSAGE" value="Добавлен способ отправки сообщений через функциональный код" />
+   </component>
+   <component name="XSLT-Support.FileAssociations.UIState">
+     <expand />
+Index: todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TestDataService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.affairs.service;\r\n\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.stereotype.Service;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport ru.javabegin.springms.todo.entity.Category;\r\nimport ru.javabegin.springms.todo.entity.Priority;\r\nimport ru.javabegin.springms.todo.entity.Task;\r\n\r\nimport java.util.Calendar;\r\nimport java.util.Date;\r\n\r\n@Service\r\npublic class TestDataService {\r\n\r\n    private final CategoryService categoryService;\r\n    private final PriorityService priorityService;\r\n    private final TaskService taskService;\r\n\r\n    public TestDataService(CategoryService categoryService, PriorityService priorityService, TaskService taskService) {\r\n        this.categoryService = categoryService;\r\n        this.priorityService = priorityService;\r\n        this.taskService = taskService;\r\n    }\r\n\r\n    public ResponseEntity<Boolean> init(@RequestBody Long userId) {\r\n        Priority priority = new Priority();\r\n        priority.setColor(\"ccc\");\r\n        priority.setTitle(\"Средний\");\r\n        priority.setUserId(userId);\r\n\r\n        Priority priority2 = new Priority();\r\n        priority2.setColor(\"fff\");\r\n        priority2.setTitle(\"Низкий\");\r\n        priority2.setUserId(userId);\r\n\r\n        priorityService.add(priority);\r\n        priorityService.add(priority2);\r\n\r\n        Category category = new Category();\r\n        category.setTitle(\"Семья\");\r\n        category.setUserId(userId);\r\n\r\n        Category category2 = new Category();\r\n        category2.setTitle(\"Отдых\");\r\n        category2.setUserId(userId);\r\n\r\n        categoryService.add(category);\r\n        categoryService.add(category2);\r\n\r\n        // завтра\r\n        Date tomorrow = new Date();\r\n        Calendar c = Calendar.getInstance();\r\n        c.setTime(tomorrow);\r\n        c.add(Calendar.DATE, 1);\r\n        tomorrow = c.getTime();\r\n\r\n        // неделя\r\n        Date oneWeek = new Date();\r\n        Calendar c2 = Calendar.getInstance();\r\n        c2.setTime(oneWeek);\r\n        c2.add(Calendar.DATE, 7);\r\n        oneWeek = c2.getTime();\r\n\r\n        Task task = new Task();\r\n        task.setTitle(\"Сходить в кино\");\r\n        task.setCategory(category);\r\n        task.setPriority(priority);\r\n        task.setCompleted(true);\r\n        task.setTaskDate(tomorrow);\r\n        task.setUserId(userId);\r\n\r\n        Task task2 = new Task();\r\n        task2.setTitle(\"Поспать\");\r\n        task2.setCategory(category2);\r\n        task2.setCompleted(false);\r\n        task2.setPriority(priority2);\r\n        task2.setTaskDate(oneWeek);\r\n        task2.setUserId(userId);\r\n\r\n\r\n        taskService.add(task);\r\n        taskService.add(task2);\r\n\r\n        // если пользователя НЕ существует\r\n        return ResponseEntity.ok(true);\r\n\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TestDataService.java b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TestDataService.java
+--- a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TestDataService.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/service/TestDataService.java	(date 1676157817691)
+@@ -1,5 +1,6 @@
+ package ru.javabegin.springms.todo.affairs.service;
+ 
++import lombok.RequiredArgsConstructor;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.stereotype.Service;
+ import org.springframework.web.bind.annotation.PostMapping;
+@@ -12,18 +13,13 @@
+ import java.util.Date;
+ 
+ @Service
++@RequiredArgsConstructor
+ public class TestDataService {
+ 
+     private final CategoryService categoryService;
+     private final PriorityService priorityService;
+     private final TaskService taskService;
+ 
+-    public TestDataService(CategoryService categoryService, PriorityService priorityService, TaskService taskService) {
+-        this.categoryService = categoryService;
+-        this.priorityService = priorityService;
+-        this.taskService = taskService;
+-    }
+-
+     public ResponseEntity<Boolean> init(@RequestBody Long userId) {
+         Priority priority = new Priority();
+         priority.setColor("ccc");
+Index: todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/PriorityController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.affairs.controller;\r\n\r\nimport org.springframework.beans.factory.annotation.Qualifier;\r\nimport org.springframework.http.HttpStatus;\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.web.bind.annotation.*;\r\nimport ru.javabegin.springms.todo.affairs.feign.UserFeignClient;\r\nimport ru.javabegin.springms.todo.affairs.search.PrioritySearchValues;\r\nimport ru.javabegin.springms.todo.affairs.service.PriorityService;\r\nimport ru.javabegin.springms.todo.entity.Priority;\r\nimport ru.javabegin.springms.todo.entity.UserData;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n@RestController\r\n@RequestMapping(\"/priority\")\r\npublic class PriorityController {\r\n\r\n    private final PriorityService priorityService;\r\n    private final UserFeignClient userFeignClient;\r\n\r\n    // Чтобы DI работал нужен конструктор\r\n    public PriorityController(PriorityService priorityService,\r\n                              @Qualifier(\"ru.javabegin.springms.todo.affairs.feign.UserFeignClient\") UserFeignClient userFeignClient) {\r\n        this.priorityService = priorityService;\r\n        this.userFeignClient = userFeignClient;\r\n    }\r\n\r\n    /**Метод POST*/\r\n    // уязвимые данные получаются через POST метод с указанием каких либо данных в тело метода\r\n    @PostMapping(\"/all\") // POST - НЕиденпотентный, то есть повторный запрос меняет состояние сервера. (Повторный тот же запрос в банк спишет повторно деньги)\r\n    public List<Priority> findAll(@RequestBody Long userId) { //  в параметры email также передается в формате json, указывается аннотация для считывания этого файла\r\n        return priorityService.findAll(userId);\r\n    }\r\n\r\n    /**Добавление приоритета методом POST*/\r\n\r\n    @PostMapping(\"/add\") //https://www.guru99.com/put-vs-post.html\r\n    // @RequestBody в postman в body нужно отправить именно в формате JSON\r\n    public ResponseEntity<Priority> add(@RequestBody Priority priority) { // ResponseEntity - специальный объект, содержащий статус ответа(ок, шибка и т.д., и объекты, указанные с помощью женерикс(как в данном случае))\r\n        // проверка на обязательные параметры\r\n        if(priority.getId()!= null && priority.getId() != 0 ) { // Это означает, что id заполнено. Значит такая категория уже существует в БД\r\n            // id создается автоматически в БД (autoincrement), поэтому его передавать не нужно\r\n\r\n            return new ResponseEntity(\"redundant param: id MUST be null\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // если передать пустое значение title\r\n        if (priority.getTitle() == null || priority.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов\r\n            return new ResponseEntity(\"missed param: title MUST be NOT NULL\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // проверка на наличие user - вызовом другого микросервиса (без Circuit Breaker)\r\n        /*if (userFeignClient.findUserById(priority.getUserId()) != null) {\r\n            return ResponseEntity.ok(priorityService.add(priority));\r\n        }*/\r\n\r\n\r\n        ResponseEntity<UserData> result = userFeignClient.findUserById(priority.getUserId());\r\n        if (result == null) { // если мс недоступен, возвращается null\r\n            return new ResponseEntity(\"система пользователей недоступна, попробуйте позднее!\", HttpStatus.NOT_FOUND);\r\n        }\r\n\r\n        if (result.getBody() != null) {// если пользователь не пустой\r\n            return ResponseEntity.ok(priorityService.add(priority));\r\n        }\r\n\r\n        return new ResponseEntity(\"user id = \" + priority.getUserId() + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n    }\r\n\r\n\r\n    /**Обновление приоритета методом PUT*/\r\n    @PutMapping(\"/update\") // Метод идемпотентный - повторная отправка запроса не влияет на сервер\r\n    public ResponseEntity update(@RequestBody Priority priority) { //Будет возвращать только статус, а не объект entity, как в POST\r\n        // проверка на обязательные параметры\r\n        if(priority.getId() == null && priority.getId() == 0 ) { // Значит такой категории нет в БД для его обновления\r\n\r\n            return new ResponseEntity(\"missed param: id\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // если передать пустое значение title\r\n        if (priority.getTitle() == null || priority.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов\r\n            return new ResponseEntity(\"missed param: title MUST be NOT NULL\", HttpStatus.NOT_ACCEPTABLE); // Вызванная категория не может быть без названия\r\n        }\r\n\r\n        priorityService.update(priority);\r\n        return new ResponseEntity(HttpStatus.OK); // возвращает только статус 200 - ОК\r\n    }\r\n\r\n    /**Удаление приоритета методом DELETE*/\r\n    // DELETE - идемпотентный метод. Удаление можно также производить через POST, причем id категории для удаления передается в body\r\n    @DeleteMapping(\"/delete/{id}\") // id категории, которую надо удалить, предается в адресной строке.\r\n    public ResponseEntity delete(@PathVariable(\"id\") Long id) {\r\n\r\n        // Применим исключение ошибки stacktrace. Через try-catch можно обработать исключение в статус\r\n        try {\r\n            priorityService.deleteById(id);\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n            return new ResponseEntity(\"id = \" + id + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        return new ResponseEntity(HttpStatus.OK); // возвращает статус сервера\r\n\r\n    }\r\n\r\n    /** Поиск приоритета методом POST по названию и email пользователя*/\r\n    @PostMapping(\"/search\")\r\n    public ResponseEntity<List<Priority>> search (@RequestBody PrioritySearchValues prioritySearchValues) { // Создали отдельный класс с параметрами title и email. См пакет search\r\n\r\n        if((prioritySearchValues.getUserId() == null || prioritySearchValues.getUserId() == 0 )){\r\n            return new ResponseEntity(\"missed param: userId \", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // если title будет пустым, то будет поиск всех категорий без фильтрации названия\r\n\r\n        List<Priority> list = priorityService.findByTitleOrUserId(prioritySearchValues.getTitle(), prioritySearchValues.getUserId());\r\n\r\n        return  ResponseEntity.ok(list);\r\n    }\r\n\r\n\r\n    /**Поиск приоритета по ID методом POST*/\r\n    @PostMapping(\"/searchById\") // ID передаем в тело метода - безопасно\r\n    public ResponseEntity<Priority> findById(@RequestBody Long id) {\r\n        Optional<Priority> priority = priorityService.findById(id);\r\n        try {\r\n            if(priority.isPresent()) { // если объект найден\r\n                return ResponseEntity.ok(priority.get());\r\n            }\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n        return new ResponseEntity(\"id = \" + id + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n\r\n    }\r\n\r\n    /**Поиск приоритета по ID методом GET*/\r\n    @GetMapping(\"/find/{id}\") // id передаем в поисковую строку - это небезопасно\r\n    public ResponseEntity<Priority> find (@PathVariable(\"id\") Long id) {\r\n        Optional<Priority> priority = priorityService.findById(id);\r\n        try {\r\n            if(priority.isPresent()) { // если объект найден\r\n                return ResponseEntity.ok(priority.get());\r\n            }\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n        return new ResponseEntity(\"id = \" + id + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/PriorityController.java b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/PriorityController.java
+--- a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/PriorityController.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/PriorityController.java	(date 1676159016690)
+@@ -1,5 +1,6 @@
+ package ru.javabegin.springms.todo.affairs.controller;
+ 
++import lombok.RequiredArgsConstructor;
+ import org.springframework.beans.factory.annotation.Qualifier;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+@@ -15,47 +16,34 @@
+ 
+ @RestController
+ @RequestMapping("/priority")
++@RequiredArgsConstructor
+ public class PriorityController {
+ 
+     private final PriorityService priorityService;
+     private final UserFeignClient userFeignClient;
+ 
+-    // Чтобы DI работал нужен конструктор
+-    public PriorityController(PriorityService priorityService,
+-                              @Qualifier("ru.javabegin.springms.todo.affairs.feign.UserFeignClient") UserFeignClient userFeignClient) {
+-        this.priorityService = priorityService;
+-        this.userFeignClient = userFeignClient;
+-    }
+ 
+     /**Метод POST*/
+-    // уязвимые данные получаются через POST метод с указанием каких либо данных в тело метода
+     @PostMapping("/all") // POST - НЕиденпотентный, то есть повторный запрос меняет состояние сервера. (Повторный тот же запрос в банк спишет повторно деньги)
+     public List<Priority> findAll(@RequestBody Long userId) { //  в параметры email также передается в формате json, указывается аннотация для считывания этого файла
+         return priorityService.findAll(userId);
+     }
+ 
+     /**Добавление приоритета методом POST*/
++    @PostMapping("/add")
++    public ResponseEntity<Priority> add(@RequestBody Priority priority) {
+ 
+-    @PostMapping("/add") //https://www.guru99.com/put-vs-post.html
+-    // @RequestBody в postman в body нужно отправить именно в формате JSON
+-    public ResponseEntity<Priority> add(@RequestBody Priority priority) { // ResponseEntity - специальный объект, содержащий статус ответа(ок, шибка и т.д., и объекты, указанные с помощью женерикс(как в данном случае))
+         // проверка на обязательные параметры
+-        if(priority.getId()!= null && priority.getId() != 0 ) { // Это означает, что id заполнено. Значит такая категория уже существует в БД
+-            // id создается автоматически в БД (autoincrement), поэтому его передавать не нужно
++        if(priority.getId()!= null && priority.getId() != 0 ) {
+ 
+             return new ResponseEntity("redundant param: id MUST be null", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+         // если передать пустое значение title
+-        if (priority.getTitle() == null || priority.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов
++        if (priority.getTitle() == null || priority.getTitle().trim().length() == 0) {
+             return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+-        // проверка на наличие user - вызовом другого микросервиса (без Circuit Breaker)
+-        /*if (userFeignClient.findUserById(priority.getUserId()) != null) {
+-            return ResponseEntity.ok(priorityService.add(priority));
+-        }*/
+-
+ 
+         ResponseEntity<UserData> result = userFeignClient.findUserById(priority.getUserId());
+         if (result == null) { // если мс недоступен, возвращается null
+@@ -73,6 +61,7 @@
+     /**Обновление приоритета методом PUT*/
+     @PutMapping("/update") // Метод идемпотентный - повторная отправка запроса не влияет на сервер
+     public ResponseEntity update(@RequestBody Priority priority) { //Будет возвращать только статус, а не объект entity, как в POST
++
+         // проверка на обязательные параметры
+         if(priority.getId() == null && priority.getId() == 0 ) { // Значит такой категории нет в БД для его обновления
+ 
+@@ -80,8 +69,8 @@
+         }
+ 
+         // если передать пустое значение title
+-        if (priority.getTitle() == null || priority.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов
+-            return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE); // Вызванная категория не может быть без названия
++        if (priority.getTitle() == null || priority.getTitle().trim().length() == 0) {
++            return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+         priorityService.update(priority);
+@@ -89,11 +78,9 @@
+     }
+ 
+     /**Удаление приоритета методом DELETE*/
+-    // DELETE - идемпотентный метод. Удаление можно также производить через POST, причем id категории для удаления передается в body
+-    @DeleteMapping("/delete/{id}") // id категории, которую надо удалить, предается в адресной строке.
++    @DeleteMapping("/delete/{id}")
+     public ResponseEntity delete(@PathVariable("id") Long id) {
+ 
+-        // Применим исключение ошибки stacktrace. Через try-catch можно обработать исключение в статус
+         try {
+             priorityService.deleteById(id);
+         } catch (Exception e) {
+@@ -107,7 +94,7 @@
+ 
+     /** Поиск приоритета методом POST по названию и email пользователя*/
+     @PostMapping("/search")
+-    public ResponseEntity<List<Priority>> search (@RequestBody PrioritySearchValues prioritySearchValues) { // Создали отдельный класс с параметрами title и email. См пакет search
++    public ResponseEntity<List<Priority>> search (@RequestBody PrioritySearchValues prioritySearchValues) {
+ 
+         if((prioritySearchValues.getUserId() == null || prioritySearchValues.getUserId() == 0 )){
+             return new ResponseEntity("missed param: userId ", HttpStatus.NOT_ACCEPTABLE);
+Index: todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/CategoryController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.affairs.controller;\r\n\r\nimport org.springframework.beans.factory.annotation.Qualifier;\r\nimport org.springframework.http.HttpStatus;\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.web.bind.annotation.*;\r\nimport ru.javabegin.springms.todo.affairs.feign.UserFeignClient;\r\nimport ru.javabegin.springms.todo.affairs.search.CategorySearchValues;\r\nimport ru.javabegin.springms.todo.affairs.service.CategoryService;\r\nimport ru.javabegin.springms.todo.entity.Category;\r\nimport ru.javabegin.springms.todo.entity.UserData;\r\nimport ru.javabegin.springms.todo.utils.resttemplate.UserRestBuilder;\r\nimport ru.javabegin.springms.todo.utils.webclient.UserWebClientBuilder;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n/**\r\n * КОНТРОЛЛЕР, ЭТО СЛОЙ, НА КОТОРОГО ПРИХОДИТ ЗАПРОС ОТ КЛИЕНТА, А САМ КОНТРОЛЛЕР ОБРАЩАЕТСЯ В СЕРВИС\r\n */\r\n\r\n@RestController\r\n@RequestMapping(\"/category\") // базовый URI\r\npublic class CategoryController {\r\n    // Через DI нужно создать ссылку на сервис - доступ к БД, ссылку на класс UserWebClientBuilder для \"общения\" мс между собой\r\n    private final CategoryService categoryService;\r\n\r\n    // ниже клиенты для вызова мс\r\n    private final UserFeignClient userFeignClient;\r\n//    private final UserRestBuilder userRestBuilder; // для синхронного вызова мс\r\n//    private final UserWebClientBuilder userWebClientBuilder; // как для синхронного так и для асинхронного вызова мс\r\n\r\n\r\n    // Чтобы DI работал нужен конструктор\r\n    public CategoryController(CategoryService categoryService,\r\n//                              UserRestBuilder userRestBuilder,\r\n//                              UserWebClientBuilder userWebClientBuilder,\r\n                              @Qualifier(\"ru.javabegin.springms.todo.affairs.feign.UserFeignClient\") UserFeignClient userFeignClient) {\r\n\r\n        this.categoryService = categoryService;\r\n        this.userFeignClient = userFeignClient;\r\n//        this.userRestBuilder = userRestBuilder;\r\n//        this.userWebClientBuilder = userWebClientBuilder;\r\n    }\r\n\r\n\r\n    /**\r\n     * Метод POST\r\n     */\r\n//https://javabegin.ru/courses/spring-restful/lessons/poluchenie-dannyh-metodom-post-2/\r\n    // уязвимые данные получаются через POST метод с указанием каких либо данных в тело метода\r\n    @PostMapping(\"/all\")\r\n    // POST - НЕиденпотентный, то есть повторный запрос меняет состояние сервера. (Повторный тот же запрос в банк спишет повторно деньги)\r\n    public List<Category> findAll(@RequestBody Long id) { //  в параметры email также передается в формате json, указывается аннотация для считывания этого файла\r\n        return categoryService.findAll(id);\r\n    }\r\n\r\n    /**\r\n     * Добавление категории методом POST\r\n     */\r\n//https://javabegin.ru/courses/spring-restful/lessons/dobavlenie-kategorii-metodom-post/\r\n    @PostMapping(\"/add\") //https://www.guru99.com/put-vs-post.html\r\n    // @RequestBody в postman в body нужно отправить именно в формате JSON\r\n    public ResponseEntity<Category> add(@RequestBody Category category) { // ResponseEntity - специальный объект, содержащий статус ответа(ок, ошибка и т.д., и объекты, указанные с помощью женерикс(как в данном случае))\r\n        // проверка на обязательные параметры\r\n        if (category.getId() != null && category.getId() != 0) { // Это означает, что id заполнено. Значит такая категория уже существует в БД\r\n            // id создается автоматически в БД (autoincrement), поэтому его передавать не нужно\r\n\r\n            return new ResponseEntity(\"redundant param: id MUST be null\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // если передать пустое значение title\r\n        if (category.getTitle() == null || category.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов\r\n            return new ResponseEntity(\"missed param: title MUST be NOT NULL\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // так как БД разделены, foreign key на user нет, то может случиться добавление записи(задачи, категории) для несуществующего user\r\n        // проверка на наличие user: через RestTemplate и WebClient(предпочтительнее)\r\n\r\n        //RESTTEMPLATE https://javabegin.ru/courses/mikroservisy-na-spring-cloud-java-kotlin/lessons/sinhronnyj-vyzov-cherez-resttemplate/\r\n       /* if (userRestBuilder.userExist(category.getUserId())) { // вызов МС  из другого модуля (todo-users)\r\n            return ResponseEntity.ok(categoryService.add(category)); // Так как add возвращает тип ResponseEntity<Category>, то результат - добавленный объект с заполненным ID\r\n        } */\r\n\r\n        //WEBCLIENT(sync) - https://javabegin.ru/courses/mikroservisy-na-spring-cloud-java-kotlin/lessons/asinhronnyj-vyzov-cherez-webclient/\r\n        /*if (userWebClientBuilder.userExistSync(category.getUserId())) {\r\n            return ResponseEntity.ok(categoryService.add(category));\r\n        }*/\r\n\r\n        //WEBCLIENT(async) - https://javabegin.ru/courses/mikroservisy-na-spring-cloud-java-kotlin/lessons/asinhronnyj-vyzov-cherez-webclient-2/\r\n//        userWebClientBuilder.userExistAsync(category.getUserId()).subscribe(user -> System.out.println(\"user = \" + user));\r\n\r\n        // FEIGN interface (без Circuit Breaker) https://javabegin.ru/courses/mikroservisy-na-spring-cloud-java-kotlin/lessons/dobavlenie-feign-v-proekt/\r\n        /*if (userFeignClient.findUserById(category.getUserId()) != null)  {\r\n            return ResponseEntity.ok(categoryService.add(category));\r\n        }*/\r\n\r\n        // https://javabegin.ru/courses/mikroservisy-na-spring-cloud-java-kotlin/lessons/dobavlenie-vykljuchatelej-v-proekt/\r\n        ResponseEntity<UserData> result = userFeignClient.findUserById(category.getUserId());\r\n        if (result == null) { // если мс недоступен, возвращается null\r\n            return new ResponseEntity(\"система пользователей недоступна, попробуйте позднее!\", HttpStatus.NOT_FOUND);\r\n        }\r\n\r\n        if (result.getBody() != null) {// если пользователь не пустой\r\n            return ResponseEntity.ok(categoryService.add(category));\r\n        }\r\n\r\n        // Если выполнить после асинхронного метода проверки на наличие пользователя, то независимо есть такой user или нет, будет выходить \"id не найден\". Поэтому асинхронный метод не подходит\r\n        // А синхронный дожидается ответа и далее добавляет, либо выводит, что не нашел пользователя\r\n        return new ResponseEntity(\"user id = \" + category.getUserId() + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n    }\r\n\r\n\r\n    /**\r\n     * Обновление категории методом PUT\r\n     */\r\n//https://javabegin.ru/courses/spring-restful/lessons/obnovlenie-kategorii-metodom-put/\r\n    @PutMapping(\"/update\") // Метод идемпотентный - повторная отправка запроса не влияет на сервер\r\n    public ResponseEntity update(@RequestBody Category category) { //Будет возвращать только статус, а не объект entity, как в POST\r\n        // проверка на обязательные параметры\r\n        if (category.getId() == null && category.getId() == 0) { // Значит такой категории нет в БД для его обновления\r\n\r\n            return new ResponseEntity(\"missed param: id\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // если передать пустое значение title\r\n        if (category.getTitle() == null || category.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов\r\n            return new ResponseEntity(\"missed param: title MUST be NOT NULL\", HttpStatus.NOT_ACCEPTABLE); // Вызванная категория не может быть без названия\r\n        }\r\n\r\n        categoryService.update(category);\r\n        return new ResponseEntity(HttpStatus.OK); // возвращает только статус 200 - ОК\r\n    }\r\n\r\n    /**\r\n     * Удаление категории методом DELETE\r\n     */\r\n//https://javabegin.ru/courses/spring-restful/lessons/udalenie-kategorii-metodom-delete-2/\r\n    // DELETE - идемпотентный метод. Удаление можно также производить через POST, причем id категории для удаления передается в body\r\n    @DeleteMapping(\"/delete/{id}\") // id категории, которую надо удалить, предается в адресной строке.\r\n    public ResponseEntity delete(@PathVariable(\"id\") Long id) {\r\n\r\n        // Применим исключение ошибки stacktrace. Через try-catch можно обработать исключение в статус\r\n        try {\r\n            categoryService.deleteById(id);\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n            return new ResponseEntity(\"id = \" + id + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        return new ResponseEntity(HttpStatus.OK); // возвращает статус сервера\r\n\r\n    }\r\n\r\n    /**\r\n     * Поиск категории методом POST по названию и email пользователя\r\n     */\r\n//https://javabegin.ru/courses/spring-restful/lessons/poisk-kategorii-metodom-post-2/\r\n    @PostMapping(\"/search\")\r\n    public ResponseEntity<List<Category>> search(@RequestBody CategorySearchValues categorySearchValues) { // Создали отдельный класс с параметрами title и email. См пакет search\r\n\r\n        if ((categorySearchValues.getUserId() == null || categorySearchValues.getUserId() == 0)) {\r\n            return new ResponseEntity(\"missed param: userId \", HttpStatus.NOT_ACCEPTABLE);\r\n        }\r\n\r\n        // если title будет пустым, то будет поиск всех категорий без фильтрации названия\r\n\r\n        List<Category> list = categoryService.findByTitleOrUserId(categorySearchValues.getTitle(), categorySearchValues.getUserId());\r\n\r\n        return ResponseEntity.ok(list);\r\n    }\r\n\r\n//https://javabegin.ru/courses/spring-restful/lessons/poisk-kategorii-po-id-metodom-post-2/\r\n\r\n    /**\r\n     * Поиск категории по ID методом POST\r\n     */\r\n    @PostMapping(\"/searchById\") // ID передаем в тело метода - безопасно\r\n    public ResponseEntity<Category> findById(@RequestBody Long id) {\r\n        Optional<Category> category = categoryService.findById(id);\r\n        try {\r\n            if (category.isPresent()) { // если объект найден\r\n                return ResponseEntity.ok(category.get());\r\n            }\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n        return new ResponseEntity(\"id = \" + id + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n    }\r\n\r\n    /**\r\n     * Поиск категорий по ID методом GET\r\n     */\r\n    @GetMapping(\"/find/{id}\") // id передаем в поисковую строку - это небезопасно\r\n    public ResponseEntity<Category> find(@PathVariable(\"id\") Long id) {\r\n        Optional<Category> category = categoryService.findById(id);\r\n        try {\r\n            if (category.isPresent()) { // если объект найден\r\n                return ResponseEntity.ok(category.get());\r\n            }\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n        return new ResponseEntity(\"id = \" + id + \" not found\", HttpStatus.NOT_ACCEPTABLE);\r\n\r\n\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/CategoryController.java b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/CategoryController.java
+--- a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/CategoryController.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/CategoryController.java	(date 1676159016722)
+@@ -1,5 +1,6 @@
+ package ru.javabegin.springms.todo.affairs.controller;
+ 
++import lombok.RequiredArgsConstructor;
+ import org.springframework.beans.factory.annotation.Qualifier;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+@@ -21,8 +22,9 @@
+ 
+ @RestController
+ @RequestMapping("/category") // базовый URI
++@RequiredArgsConstructor
+ public class CategoryController {
+-    // Через DI нужно создать ссылку на сервис - доступ к БД, ссылку на класс UserWebClientBuilder для "общения" мс между собой
++    // Через DI нужно создать ссылку на сервис - доступ к БД
+     private final CategoryService categoryService;
+ 
+     // ниже клиенты для вызова мс
+@@ -30,25 +32,10 @@
+ //    private final UserRestBuilder userRestBuilder; // для синхронного вызова мс
+ //    private final UserWebClientBuilder userWebClientBuilder; // как для синхронного так и для асинхронного вызова мс
+ 
+-
+-    // Чтобы DI работал нужен конструктор
+-    public CategoryController(CategoryService categoryService,
+-//                              UserRestBuilder userRestBuilder,
+-//                              UserWebClientBuilder userWebClientBuilder,
+-                              @Qualifier("ru.javabegin.springms.todo.affairs.feign.UserFeignClient") UserFeignClient userFeignClient) {
+-
+-        this.categoryService = categoryService;
+-        this.userFeignClient = userFeignClient;
+-//        this.userRestBuilder = userRestBuilder;
+-//        this.userWebClientBuilder = userWebClientBuilder;
+-    }
+-
+-
+     /**
+      * Метод POST
+      */
+-//https://javabegin.ru/courses/spring-restful/lessons/poluchenie-dannyh-metodom-post-2/
+-    // уязвимые данные получаются через POST метод с указанием каких либо данных в тело метода
++
+     @PostMapping("/all")
+     // POST - НЕиденпотентный, то есть повторный запрос меняет состояние сервера. (Повторный тот же запрос в банк спишет повторно деньги)
+     public List<Category> findAll(@RequestBody Long id) { //  в параметры email также передается в формате json, указывается аннотация для считывания этого файла
+@@ -58,44 +45,45 @@
+     /**
+      * Добавление категории методом POST
+      */
+-//https://javabegin.ru/courses/spring-restful/lessons/dobavlenie-kategorii-metodom-post/
+     @PostMapping("/add") //https://www.guru99.com/put-vs-post.html
+-    // @RequestBody в postman в body нужно отправить именно в формате JSON
+-    public ResponseEntity<Category> add(@RequestBody Category category) { // ResponseEntity - специальный объект, содержащий статус ответа(ок, ошибка и т.д., и объекты, указанные с помощью женерикс(как в данном случае))
++    public ResponseEntity<Category> add(@RequestBody Category category) {
++        // ResponseEntity - специальный объект, содержащий статус ответа(ок, ошибка и т.д., и объекты, указанные с помощью женерикс(как в данном случае))
++
+         // проверка на обязательные параметры
+-        if (category.getId() != null && category.getId() != 0) { // Это означает, что id заполнено. Значит такая категория уже существует в БД
++        if (category.getId() != null && category.getId() != 0) { // Значит такая категория уже существует в БД
+             // id создается автоматически в БД (autoincrement), поэтому его передавать не нужно
+ 
+             return new ResponseEntity("redundant param: id MUST be null", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+         // если передать пустое значение title
+-        if (category.getTitle() == null || category.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов
++        if (category.getTitle() == null || category.getTitle().trim().length() == 0) {
+             return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+         // так как БД разделены, foreign key на user нет, то может случиться добавление записи(задачи, категории) для несуществующего user
+         // проверка на наличие user: через RestTemplate и WebClient(предпочтительнее)
+ 
+-        //RESTTEMPLATE https://javabegin.ru/courses/mikroservisy-na-spring-cloud-java-kotlin/lessons/sinhronnyj-vyzov-cherez-resttemplate/
+-       /* if (userRestBuilder.userExist(category.getUserId())) { // вызов МС  из другого модуля (todo-users)
++        //RESTTEMPLATE
++       /* if (userRestBuilder.userExist(category.getUserId())) { // вызов МС  из другого модуля (users)
+             return ResponseEntity.ok(categoryService.add(category)); // Так как add возвращает тип ResponseEntity<Category>, то результат - добавленный объект с заполненным ID
+         } */
+ 
+-        //WEBCLIENT(sync) - https://javabegin.ru/courses/mikroservisy-na-spring-cloud-java-kotlin/lessons/asinhronnyj-vyzov-cherez-webclient/
++        //WEBCLIENT(sync)
+         /*if (userWebClientBuilder.userExistSync(category.getUserId())) {
+             return ResponseEntity.ok(categoryService.add(category));
+         }*/
+ 
+-        //WEBCLIENT(async) - https://javabegin.ru/courses/mikroservisy-na-spring-cloud-java-kotlin/lessons/asinhronnyj-vyzov-cherez-webclient-2/
++        //WEBCLIENT(async)
+ //        userWebClientBuilder.userExistAsync(category.getUserId()).subscribe(user -> System.out.println("user = " + user));
+ 
+-        // FEIGN interface (без Circuit Breaker) https://javabegin.ru/courses/mikroservisy-na-spring-cloud-java-kotlin/lessons/dobavlenie-feign-v-proekt/
++        // FEIGN interface (без Circuit Breaker)
+         /*if (userFeignClient.findUserById(category.getUserId()) != null)  {
+             return ResponseEntity.ok(categoryService.add(category));
+         }*/
+ 
+-        // https://javabegin.ru/courses/mikroservisy-na-spring-cloud-java-kotlin/lessons/dobavlenie-vykljuchatelej-v-proekt/
++
++        // с применением CB
+         ResponseEntity<UserData> result = userFeignClient.findUserById(category.getUserId());
+         if (result == null) { // если мс недоступен, возвращается null
+             return new ResponseEntity("система пользователей недоступна, попробуйте позднее!", HttpStatus.NOT_FOUND);
+@@ -114,9 +102,8 @@
+     /**
+      * Обновление категории методом PUT
+      */
+-//https://javabegin.ru/courses/spring-restful/lessons/obnovlenie-kategorii-metodom-put/
+     @PutMapping("/update") // Метод идемпотентный - повторная отправка запроса не влияет на сервер
+-    public ResponseEntity update(@RequestBody Category category) { //Будет возвращать только статус, а не объект entity, как в POST
++    public ResponseEntity update(@RequestBody Category category) { // Будет возвращать только статус, а не объект entity, как в POST
+         // проверка на обязательные параметры
+         if (category.getId() == null && category.getId() == 0) { // Значит такой категории нет в БД для его обновления
+ 
+@@ -124,8 +111,8 @@
+         }
+ 
+         // если передать пустое значение title
+-        if (category.getTitle() == null || category.getTitle().trim().length() == 0) { // trim() - удаление пробелов по краям текста. Т.е. учитывается длина текста без учёта пробелов
+-            return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE); // Вызванная категория не может быть без названия
++        if (category.getTitle() == null || category.getTitle().trim().length() == 0) {
++            return new ResponseEntity("missed param: title MUST be NOT NULL", HttpStatus.NOT_ACCEPTABLE);
+         }
+ 
+         categoryService.update(category);
+@@ -135,7 +122,7 @@
+     /**
+      * Удаление категории методом DELETE
+      */
+-//https://javabegin.ru/courses/spring-restful/lessons/udalenie-kategorii-metodom-delete-2/
++
+     // DELETE - идемпотентный метод. Удаление можно также производить через POST, причем id категории для удаления передается в body
+     @DeleteMapping("/delete/{id}") // id категории, которую надо удалить, предается в адресной строке.
+     public ResponseEntity delete(@PathVariable("id") Long id) {
+@@ -155,7 +142,6 @@
+     /**
+      * Поиск категории методом POST по названию и email пользователя
+      */
+-//https://javabegin.ru/courses/spring-restful/lessons/poisk-kategorii-metodom-post-2/
+     @PostMapping("/search")
+     public ResponseEntity<List<Category>> search(@RequestBody CategorySearchValues categorySearchValues) { // Создали отдельный класс с параметрами title и email. См пакет search
+ 
+@@ -170,7 +156,6 @@
+         return ResponseEntity.ok(list);
+     }
+ 
+-//https://javabegin.ru/courses/spring-restful/lessons/poisk-kategorii-po-id-metodom-post-2/
+ 
+     /**
+      * Поиск категории по ID методом POST
+Index: todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/functionalcode/MessageOutChannel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.users.mq.functionalcode;\r\n\r\nimport lombok.Getter;\r\nimport org.springframework.context.annotation.Bean;\r\nimport org.springframework.context.annotation.Configuration;\r\nimport org.springframework.messaging.Message;\r\nimport reactor.core.publisher.Flux;\r\nimport reactor.core.publisher.Sinks;\r\nimport reactor.util.concurrent.Queues;\r\n\r\nimport java.util.function.Supplier;\r\n\r\n\r\n@Configuration // Spring считывает класс, создает соответсвующий, bean, работающий с каналами сообщений\r\n@Getter\r\n\r\n// Класс для описания всех каналов, по которым будут отправляться сообщения. Аналог интерфейса TodoOutBinding\r\n// каналы описываются с помощью функционального кода\r\npublic class MessageOutChannel {\r\n\r\n    // messageBus специальная шина-слушатель, который принимает и отправляет уведомления всем Consumer в каналы SCS, что добавлен новый пользователь\r\n    // Many - указывает, что слушателей может быть много\r\n    // many().multicast() - метод, для уведомления всех слушателей\r\n    // onBackpressureBuffer() - метод устанавливающий параметры \"трубе\" - сколько сообщений может влезть\r\n    // autoCancel = false - если все слушатели отвяжутся от \"трубы\", messageSender автоматически не уничтожится\r\n    private Sinks.Many<Message<Long>> messageBus = Sinks.many().multicast().onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);\r\n\r\n    // Создается bean - поставщик, который при считывании шины получает сообщение о добавленном user и указывает создать тестовые данные для него.\r\n    // Supplier - встроенный интерфейс-поставщик, описывающий канал отправки\r\n    // В реактивном коде Flux выступает в качестве коллекции или \"трубы\",\r\n    // куда будут помещаться сообщения типа Message, считанные с шины, у которого тип Long, так как передаем id нового user\r\n\r\n    @Bean\r\n    public Supplier<Flux<Message<Long>>> initNewUser() { // Supplier подписывается на нашу шину messageBus\r\n        // Flux указывается для того, чтобы сообщение отправлялось по требованию(после добавления нового user), без него будет автоматическое постоянное отправление\r\n        return () -> messageBus.asFlux(); // будет считывать данные из потока Flux (как только в эту шину попадают сообщения - как они туда попадают описано в другом классе)\r\n        // asFlux() - метод, преобразующий поток данных в stream типа Flux(понятный тип для Java), содержащий все данные из исходного потока\r\n\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/functionalcode/MessageOutChannel.java b/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/functionalcode/MessageOutChannel.java
+--- a/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/functionalcode/MessageOutChannel.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-users/src/main/java/ru/javabegin/springms/todo/users/mq/functionalcode/MessageOutChannel.java	(date 1676160071206)
+@@ -17,26 +17,29 @@
+ // Класс для описания всех каналов, по которым будут отправляться сообщения. Аналог интерфейса TodoOutBinding
+ // каналы описываются с помощью функционального кода
+ public class MessageOutChannel {
+-
+-    // messageBus специальная шина-слушатель, который принимает и отправляет уведомления всем Consumer в каналы SCS, что добавлен новый пользователь
+-    // Many - указывает, что слушателей может быть много
+-    // many().multicast() - метод, для уведомления всех слушателей
+-    // onBackpressureBuffer() - метод устанавливающий параметры "трубе" - сколько сообщений может влезть
+-    // autoCancel = false - если все слушатели отвяжутся от "трубы", messageSender автоматически не уничтожится
+     private Sinks.Many<Message<Long>> messageBus = Sinks.many().multicast().onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
+ 
+-    // Создается bean - поставщик, который при считывании шины получает сообщение о добавленном user и указывает создать тестовые данные для него.
+-    // Supplier - встроенный интерфейс-поставщик, описывающий канал отправки
+-    // В реактивном коде Flux выступает в качестве коллекции или "трубы",
+-    // куда будут помещаться сообщения типа Message, считанные с шины, у которого тип Long, так как передаем id нового user
++    @Bean // Бин-сообщение. В properties для definition и bindings указывается такое же название
++    public Supplier<Flux<Message<Long>>> newUserProduce() { // Supplier подписывается на нашу шину messageBus
+ 
+-    @Bean
+-    public Supplier<Flux<Message<Long>>> initNewUser() { // Supplier подписывается на нашу шину messageBus
+-        // Flux указывается для того, чтобы сообщение отправлялось по требованию(после добавления нового user), без него будет автоматическое постоянное отправление
+         return () -> messageBus.asFlux(); // будет считывать данные из потока Flux (как только в эту шину попадают сообщения - как они туда попадают описано в другом классе)
+-        // asFlux() - метод, преобразующий поток данных в stream типа Flux(понятный тип для Java), содержащий все данные из исходного потока
++    }
++    /*
++     messageBus специальная шина-слушатель, который принимает и отправляет уведомления всем Consumer в каналы SCS, что добавлен новый пользователь
++     Many - указывает, что слушателей может быть много
++     many().multicast() - метод, для уведомления всех слушателей
++     onBackpressureBuffer() - метод устанавливающий параметры "трубе" - сколько сообщений может влезть
++     autoCancel = false - если все слушатели отвяжутся от "трубы", messageSender автоматически не уничтожится
+ 
+-    }
++     Создается bean - поставщик, который при считывании шины получает сообщение о добавленном user и указывает создать тестовые данные для него.
++     Supplier - встроенный интерфейс-поставщик, описывающий канал отправки
++     В реактивном коде Flux выступает в качестве коллекции или "трубы",
++     куда будут помещаться сообщения типа Message, считанные с шины, у которого тип Long, так как передаем id нового user
++
++     Flux указывается для того, чтобы сообщение отправлялось по требованию(после добавления нового user),
++     без него будет автоматическое постоянное отправление
+ 
++     asFlux() - метод, преобразующий поток данных в stream типа Flux(понятный тип для Java), содержащий все данные из исходного потока
++*/
+ 
+ }
+Index: todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/StatisticController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.javabegin.springms.todo.affairs.controller;\r\n\r\nimport org.springframework.http.ResponseEntity;\r\nimport org.springframework.web.bind.annotation.PostMapping;\r\nimport org.springframework.web.bind.annotation.RequestBody;\r\nimport org.springframework.web.bind.annotation.RequestMapping;\r\nimport org.springframework.web.bind.annotation.RestController;\r\nimport ru.javabegin.springms.todo.affairs.service.StatisticService;\r\nimport ru.javabegin.springms.todo.entity.Statistic;\r\n\r\n@RestController\r\n@RequestMapping(\"/statistic\")\r\npublic class StatisticController {\r\n    private final StatisticService statisticService;\r\n\r\n    public StatisticController(StatisticService statisticService) {\r\n        this.statisticService = statisticService;\r\n    }\r\n\r\n    @PostMapping(\"/find\") // POST - НЕиденпотентный, то есть повторный запрос меняет состояние сервера. (Повторный тот же запрос в банк спишет повторно деньги)\r\n    public ResponseEntity<Statistic> find(@RequestBody Long userId) { //  в параметры email также передается в формате json, указывается аннотация для считывания этого файла\r\n        return ResponseEntity.ok(statisticService.findStatistic(userId));\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/StatisticController.java b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/StatisticController.java
+--- a/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/StatisticController.java	(revision c79c46eabe6ff35c54e605baee7ea00d44796036)
++++ b/todo-affairs/src/main/java/ru/javabegin/springms/todo/affairs/controller/StatisticController.java	(date 1676159016737)
+@@ -1,5 +1,6 @@
+ package ru.javabegin.springms.todo.affairs.controller;
+ 
++import lombok.RequiredArgsConstructor;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.web.bind.annotation.PostMapping;
+ import org.springframework.web.bind.annotation.RequestBody;
+@@ -10,15 +11,11 @@
+ 
+ @RestController
+ @RequestMapping("/statistic")
++@RequiredArgsConstructor
+ public class StatisticController {
+     private final StatisticService statisticService;
+-
+-    public StatisticController(StatisticService statisticService) {
+-        this.statisticService = statisticService;
+-    }
+-
+-    @PostMapping("/find") // POST - НЕиденпотентный, то есть повторный запрос меняет состояние сервера. (Повторный тот же запрос в банк спишет повторно деньги)
+-    public ResponseEntity<Statistic> find(@RequestBody Long userId) { //  в параметры email также передается в формате json, указывается аннотация для считывания этого файла
++    @PostMapping("/find")
++    public ResponseEntity<Statistic> find(@RequestBody Long userId) {
+         return ResponseEntity.ok(statisticService.findStatistic(userId));
+     }
+ 
